@@ -58,14 +58,14 @@ void speedTest(int *listOriginal,int listSize)
 {
     int *list=new int[listSize];
     
-    {
+    /*{
         memcpy(list,listOriginal,listSize*sizeof(int));        
         {
             SimpleProfiler sp("bubble");
             bubbleSort(list,listSize);
         }
         test_sort(list,listSize);
-    }
+    }*/
 
     {
         memcpy(list,listOriginal,listSize*sizeof(int));
@@ -93,34 +93,37 @@ void speedTest(int *listOriginal,int listSize)
         }
         test_sort(list,listSize);
     }
+
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        {
+            SimpleProfiler sp("heap");
+            heapSort(list,listSize);
+        }
+        test_sort(list,listSize);
+    }
     
     delete list;
+}
+
+void sortTest(int *list,int listSize)
+{
+    printList(list,listSize);
+ 
+    heapSort(list,listSize);
+    test_sort(list,listSize);
+    
+    printList(list,listSize);
 }
 
 int main()
 {
     try{
-        const int listSize=30000;
+        const int listSize=120000;
         int *list=createList(listSize);
         
-        speedTest(list,listSize);
-    
-    //printList(list,listSize);
-    
-
-//	unsigned int millis=getMilliseconds();
-
-    /*{
-        SimpleProfiler sp("bubble");
-        bubbleSort(list,listSize);
-    }*/
-
-	//millis=getMilliseconds()-millis;
-
-	
-	//printList(list,listSize);	
-
-	//cout <<endl<< "millis: "<<millis<<endl;
+        speedTest(list,listSize);    
+        //sortTest(list,listSize);
 
     	return 0;
     }catch(string s){
