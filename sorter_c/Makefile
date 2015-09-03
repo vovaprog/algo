@@ -1,4 +1,4 @@
 
 
 all:
-	g++ -O3 -march=native ./sorter.cpp ./small_utils.cpp -o sorter
+	g++ -O3 -march=native -I. ./main.cpp ./small_utils.cpp ./bubble_sort.cpp ./merge_sort.cpp ./shell_sort.cpp ./insertion_sort.cpp -o sorter
