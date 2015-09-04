@@ -106,6 +106,32 @@ void speedTest(int *listOriginal,int listSize)
     delete list;
 }
 
+void binarySearchTest()
+{
+    const int listSize=100;
+    int *list=new int[listSize];
+    
+    for(int i=0;i<listSize;i++)
+    {
+        list[i]=i * 5;
+    }
+    
+    for(int i=0;i<listSize;i++)
+    {
+        int binarySearchResult = binarySearch2(list,listSize,i);
+        
+        cout <<"search "<<i<<"   result "<<binarySearchResult<<endl;
+        
+        /*if(binarySearchResult!=i)
+        {
+            throw string("invalid binary search!");
+        }*/
+    }
+    
+    delete[] list;
+}
+
+
 void sortTest(int *list,int listSize)
 {
     printList(list,listSize);
@@ -122,8 +148,9 @@ int main()
         const int listSize=120000;
         int *list=createList(listSize);
         
-        speedTest(list,listSize);    
+        //speedTest(list,listSize);    
         //sortTest(list,listSize);
+        binarySearchTest();
 
     	return 0;
     }catch(string s){
