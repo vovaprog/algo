@@ -21,13 +21,13 @@ void test_sort(int *list,int listSize)
     }
 }
 
-int* createList(int listSize)
+int* createList(int listSize, int maxValue)
 {
     int *list=new int[listSize];
     
 	for(int i=0;i<listSize;i++)
 	{
-		list[i]=rand() % 100;
+		list[i]=rand() % (maxValue+1);
 	}
     
     return list;
@@ -56,7 +56,18 @@ void printList(int *list,int listSize)
     cout <<"]"<<endl;
 }
 
-void speedTest(int *listOriginal,int listSize)
+int mostSignificantBit(int x)
+{
+    int bit=0;
+    while(x!=0)
+    {
+        x = x >> 1;
+        bit++;
+    }
+    return bit;
+}
+
+void speedTest(int *listOriginal,int listSize, int maxValue)
 {
     int *list=new int[listSize];
     
@@ -104,6 +115,19 @@ void speedTest(int *listOriginal,int listSize)
         }
         test_sort(list,listSize);
     }
+
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        int maxBit = mostSignificantBit(maxValue);
+        cout <<"max bit: "<<maxBit<<endl;
+        
+        {
+            SimpleProfiler sp("radix");
+            radixSortMsd(list,listSize,6);            
+        }
+        test_sort(list,listSize);
+    }
+        
     
     delete list;
 }
@@ -137,8 +161,9 @@ void binarySearchTest()
 void sortTest(int *list,int listSize)
 {
     printList(list,listSize);
- 
-    heapSort(list,listSize);
+     
+    //heapSort(list,listSize);
+    radixSortMsd(list,listSize,6);
     test_sort(list,listSize);
     
     printList(list,listSize);
@@ -147,14 +172,19 @@ void sortTest(int *list,int listSize)
 int main()
 {
     try{
-        const int listSize=120000;
-        int *list=createList(listSize);
+        const int listSize=100000;
+        const int maxValue=10;
+        int *list=createList(listSize,maxValue);
         
-        //speedTest(list,listSize);    
+        speedTest(list,listSize,maxValue);    
         //sortTest(list,listSize);
         //binarySearchTest();
-        reverseListTest();
+        //reverseListTest();
 
+        //printList(list,listSize);
+        //radixSortMsd(list,listSize,6);
+        //printList(list,listSize);
+        
     	return 0;
     }catch(string s){
         cout <<"exception: "<<s<<endl;
