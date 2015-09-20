@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <string.h>
 
 #include "small_utils.h"
 #include "SimpleProfiler.h"
@@ -7,6 +8,7 @@
 
 using namespace std;
 
+void reverseListTest();
 
 void test_sort(int *list,int listSize)
 {
@@ -150,7 +152,8 @@ int main()
         
         //speedTest(list,listSize);    
         //sortTest(list,listSize);
-        binarySearchTest();
+        //binarySearchTest();
+        reverseListTest();
 
     	return 0;
     }catch(string s){
