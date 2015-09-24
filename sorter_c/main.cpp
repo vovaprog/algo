@@ -176,7 +176,7 @@ int main()
         const int maxValue=10;
         int *list=createList(listSize,maxValue);
         
-        speedTest(list,listSize,maxValue);    
+        //speedTest(list,listSize,maxValue);    
         //sortTest(list,listSize);
         //binarySearchTest();
         //reverseListTest();
@@ -184,6 +184,7 @@ int main()
         //printList(list,listSize);
         //radixSortMsd(list,listSize,6);
         //printList(list,listSize);
+        testSearch();
         
     	return 0;
     }catch(string s){
