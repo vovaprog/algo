@@ -136,7 +136,7 @@ int searchBack(const char *s,const char *pattern)
     int stringLength=strlen(s);
     int patternLength=strlen(pattern);
     
-    int shift=0;
+    int shift=patternLength;
     
     for(int i=1;i<patternLength;i++)
     {
@@ -159,26 +159,23 @@ int searchBack(const char *s,const char *pattern)
         }
         else
         {
-            if(shift==0)
+            cout <<"(0 "<<si<<","<<pi<<")";
+            
+            if(pi==patternLength-1)
             {
-                cout <<"(0 "<<si<<","<<pi<<")";
-                
-                si+=patternLength;
-                pi=patternLength-1;
-                
-                cout <<"(0> "<<si<<","<<pi<<")";
+                si++;
             }
             else
             {
-                cout <<"(+ "<<si<<","<<pi<<")";
-                
+                si+=(patternLength-1-pi) + shift;
                 pi=patternLength-1;
-                si+=shift;
             }
+
+            cout <<"(0> "<<si<<","<<pi<<")";
         }
         if(pi<0)
         {
-            return si;
+            return si+1;
         }
         if(si>=stringLength)
         {
@@ -206,7 +203,7 @@ void testSearch()
     
     for(int i=0;i<ssLength;i+=2)
     {
-        int result=search2(ss[i],ss[i+1]);
+        int result=searchBack(ss[i],ss[i+1]);
         
         cout<<endl<<ss[i]<<endl<<ss[i+1]<<endl;
         cout <<"result: "<<result<<endl;
