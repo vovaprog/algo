@@ -72,6 +72,65 @@ int search(const char *s,const char *pattern)
     }    
 }
 
+
+int search2(const char *s,const char *pattern)
+{
+    int stringLength=strlen(s);
+    int patternLength=strlen(pattern);
+    
+    int *patternIndexRules=new int[patternLength];    
+    int matchIndex=-1;
+    
+    patternIndexRules[0]=0;
+    
+    for(int i=1;i<patternLength;i++)
+    {
+        if(matchIndex<0)
+        {
+            if(compare(pattern+i,pattern,patternLength-i))
+            {
+                matchIndex=i;
+            }
+            patternIndexRules[i]=0;
+        }
+        else
+        {
+            patternIndexRules[i]=i-matchIndex;
+        }
+    }
+
+    int si=0,pi=0;    
+    
+    while(true)
+    {        
+        if(s[si]==pattern[pi])
+        {            
+            si++;
+            pi++;            
+        }
+        else
+        {            
+            if(pi==0)
+            {
+                si++;
+            }            
+            pi = patternIndexRules[pi];
+        }
+        
+        if(pi==patternLength)
+        {
+            delete[] patternIndexRules;
+            return si-patternLength;
+        }
+        if(si==stringLength)
+        {
+            delete[] patternIndexRules;
+            return -1;
+        }        
+    }    
+}
+
+
 int searchBack(const char *s,const char *pattern)
 {
     int stringLength=strlen(s);
@@ -147,7 +206,7 @@ void testSearch()
     
     for(int i=0;i<ssLength;i+=2)
     {
-        int result=search(ss[i],ss[i+1]);
+        int result=search2(ss[i],ss[i+1]);
         
         cout<<endl<<ss[i]<<endl<<ss[i+1]<<endl;
         cout <<"result: "<<result<<endl;
