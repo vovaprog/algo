@@ -14,3 +14,6 @@ void radixSortMsd(int *list, int listSize,int maxBit);
 int search(char *s,char *pattern);
 void testSearch();
 
+int searchBoyerMoore(const char *s,const unsigned char *pattern);
+void testSearchBoyerMoore();
+void testPrefixFunction();

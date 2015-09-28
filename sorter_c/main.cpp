@@ -185,6 +185,8 @@ int main()
         //radixSortMsd(list,listSize,6);
         //printList(list,listSize);
         testSearch();
+        //testSearchBoyerMoore();
+        //testPrefixFunction();
         
     	return 0;
     }catch(string s){

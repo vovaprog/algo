@@ -130,6 +130,56 @@ int search2(const char *s,const char *pattern)
     }    
 }
 
+int* prefixFunction(const char *pattern);
+void printPrefixFunction(const char *s, int *prefixFun);
+
+int search3(const char *s,const char *pattern)
+{
+    int stringLength=strlen(s);
+    int patternLength=strlen(pattern);
+    
+    int *patternIndexRules=prefixFunction(pattern); 
+    printPrefixFunction(s,patternIndexRules);
+
+    return -1;
+    
+    int si=0,pi=0;    
+    
+    while(true)
+    {        
+        cout <<"si: "<<si<<" ";
+        cout <<"pi: "<<pi<<" ";
+        
+        if(s[si]==pattern[pi])
+        {            
+            si++;
+            pi++;            
+            
+            if(pi==patternLength)
+            {
+                delete[] patternIndexRules;
+                return si-patternLength;
+            }            
+        }
+        else
+        {            
+            if(pi==0)
+            {
+                si++;
+            }            
+            else
+            {
+                pi = patternIndexRules[pi]-1;
+            }
+        }
+        
+        if(si==stringLength)
+        {
+            delete[] patternIndexRules;
+            return -1;
+        }        
+    }    
+}
 
 int searchBack(const char *s,const char *pattern)
 {
@@ -203,7 +253,7 @@ void testSearch()
     
     for(int i=0;i<ssLength;i+=2)
     {
-        int result=searchBack(ss[i],ss[i+1]);
+        int result=search2(ss[i],ss[i+1]);
         
         cout<<endl<<ss[i]<<endl<<ss[i+1]<<endl;
         cout <<"result: "<<result<<endl;
