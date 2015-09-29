@@ -17,3 +17,5 @@ void testSearch();
 int searchBoyerMoore(const char *s,const unsigned char *pattern);
 void testSearchBoyerMoore();
 void testPrefixFunction();
+
+void testReverseNeighbors();

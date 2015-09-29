@@ -184,9 +184,10 @@ int main()
         //printList(list,listSize);
         //radixSortMsd(list,listSize,6);
         //printList(list,listSize);
-        testSearch();
+        //testSearch();
         //testSearchBoyerMoore();
         //testPrefixFunction();
+        testReverseNeighbors();
         
     	return 0;
     }catch(string s){
