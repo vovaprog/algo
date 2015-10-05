@@ -1,4 +1,30 @@
+DEPDIR := .d
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
+
+CXXFLAGS += -std=c++11 -I.
+
+COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+COMPILE.cc = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
+POSTCOMPILE = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
+
+all: $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+	$(CXX) -o ./sorter *.o
+
+%.o : %.c $(DEPDIR)/%.d
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+%.o : %.cpp $(DEPDIR)/%.d
+	$(COMPILE.cc) $(OUTPUT_OPTION) $<
+	$(POSTCOMPILE)
+
+$(DEPDIR)/%.d: ;
+
+include $(patsubst %,$(DEPDIR)/%.d,$(basename $(SRCS)))
 
 
-all:
-	g++ -std=c++11 -O3 -march=native -I. ./main.cpp ./small_utils.cpp ./bubble_sort.cpp ./merge_sort.cpp ./shell_sort.cpp ./insertion_sort.cpp ./heap_sort.cpp ./binary_search.cpp ./reverse_list.cpp ./radix_sort_msd.cpp ./string_search.cpp ./string_search_boyer_moore.cpp ./list_reverse_neighbors.cpp -o sorter
+.PHONY : clean
+clean:
+	rm ./*.o
+	rm ./sorter
