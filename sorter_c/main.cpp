@@ -46,14 +46,19 @@ int* createListCopy(int *list,int listSize)
 }
 
 
-void printList(int *list,int listSize)
+void printList(int *list,int start, int end)
 {
     cout <<"[";
-	for(int i=0;i<listSize;i++)
+	for(int i=start;i<end;i++)
 	{
 		cout <<list[i]<<" ";		
 	}
     cout <<"]"<<endl;
+}
+
+void printList(int *list,int size)
+{
+    printList(list,0,size);    
 }
 
 int mostSignificantBit(int x)
@@ -89,7 +94,7 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
         test_sort(list,listSize);
     }
     
-    {
+    /*{
         memcpy(list,listOriginal,listSize*sizeof(int));
         {
             SimpleProfiler sp("insertion");
@@ -105,7 +110,7 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
             shellSort(list,listSize);
         }
         test_sort(list,listSize);
-    }
+    }*/
 
     {
         memcpy(list,listOriginal,listSize*sizeof(int));
@@ -116,7 +121,7 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
         test_sort(list,listSize);
     }
 
-    {
+    /*{
         memcpy(list,listOriginal,listSize*sizeof(int));
         int maxBit = mostSignificantBit(maxValue);
         cout <<"max bit: "<<maxBit<<endl;
@@ -126,8 +131,16 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
             radixSortMsd(list,listSize,6);            
         }
         test_sort(list,listSize);
+    }*/
+
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        {
+            SimpleProfiler sp("quick");
+            quickSort(list,listSize);
+        }
+        test_sort(list,listSize);
     }
-        
     
     delete list;
 }
@@ -174,12 +187,12 @@ void sortTest(int *list,int listSize)
 int main()
 {
     try{
-        const int listSize=20;
-        const int maxValue=100;
+        const int listSize=1000000;
+        const int maxValue=10000;
         int *list=createList(listSize,maxValue);
         
-        //speedTest(list,listSize,maxValue);    
-        sortTest(list,listSize);
+        speedTest(list,listSize,maxValue);    
+        //sortTest(list,listSize);
         //binarySearchTest();
         //reverseListTest();
 

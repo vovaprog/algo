@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 void printList(int *list,int listSize);
+void printList(int *list,int start, int end);
 
 int pivot(int *list,int start,int end)
 {
@@ -17,8 +18,6 @@ int pivot(int *list,int start,int end)
             int temp=list[si];
             list[si]=list[ei];
             list[ei]=temp;
-            //si++;
-            //ei--;
         }
         else
         {
@@ -30,24 +29,15 @@ int pivot(int *list,int start,int end)
 
 void quickSort(int *list,int start,int end)
 {
-    printf("<<%d : %d>>",start,end);
-    
-    if(end-start<1) return;
+    if(end-start<2) return;
     
     int p = pivot(list,start,end);
-    /*printf(" res pivot = %d\n",p);
-    printf("res:");
-    printList(list+start,end-start);*/    
     
-    //if(p<end)
-    {
-        quickSort(list,start,p);
-    }
+    if(p==start) p++;
     
-    //if(p>start)
-    {
-        quickSort(list,p,end);
-    }
+    quickSort(list,start,p);
+    
+    quickSort(list,p,end);
 }
 
 
