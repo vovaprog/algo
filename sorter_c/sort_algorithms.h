@@ -19,3 +19,5 @@ void testSearchBoyerMoore();
 void testPrefixFunction();
 
 void testReverseNeighbors();
+
+void quickSort(int *list,int listSize);

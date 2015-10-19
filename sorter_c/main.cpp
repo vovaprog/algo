@@ -163,21 +163,23 @@ void sortTest(int *list,int listSize)
     printList(list,listSize);
      
     //heapSort(list,listSize);
-    radixSortMsd(list,listSize,6);
-    test_sort(list,listSize);
+    //radixSortMsd(list,listSize,6);    
+    quickSort(list,listSize);
     
     printList(list,listSize);
+    
+    test_sort(list,listSize);
 }
 
 int main()
 {
     try{
-        const int listSize=100000;
-        const int maxValue=10;
+        const int listSize=20;
+        const int maxValue=100;
         int *list=createList(listSize,maxValue);
         
         //speedTest(list,listSize,maxValue);    
-        //sortTest(list,listSize);
+        sortTest(list,listSize);
         //binarySearchTest();
         //reverseListTest();
 
@@ -187,7 +189,7 @@ int main()
         //testSearch();
         //testSearchBoyerMoore();
         //testPrefixFunction();
-        testReverseNeighbors();
+        //testReverseNeighbors();
         
     	return 0;
     }catch(string s){
