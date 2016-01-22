@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int main()
+int main_616b()
 {
     int nofRows, nofCols;
     cin >> nofRows;
