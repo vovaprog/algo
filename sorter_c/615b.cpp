@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -7,35 +8,24 @@ int maxBeauty = 0;
 
 struct Line{
     int start,end;
+    int maxTail;
 };
 
 Line *lines;
 
-//set<int> visited;
-int visited[200000];
 
 int nPoints, nLines;
 
-inline int calcTail(int checkI)
-{
-    int count=0;
-    for(int i=0;i<nLines;i++)
-    {        
-        if(lines[i].start==checkI || lines[i].end==checkI)
-        {
-            count++;
-        }
-    }    
-    return count;
-}
+int pointCounts[100001];
+
 
 void findBeauty(int curI, int tailLength)
 {
-    //printf("findBeauty %d %d\n",curI,tailLength);
-
-    tailLength+=1;
+    tailLength += 1;
     
-    int numberOfHair = calcTail(lines[curI].end);
+    lines[curI].maxTail = tailLength;
+        
+    int numberOfHair = pointCounts[lines[curI].end];
     
     if(numberOfHair * (tailLength+1) > maxBeauty)
     {
@@ -44,18 +34,13 @@ void findBeauty(int curI, int tailLength)
         //printf("MAX Beauty s: %d   e: %d   l: %d   h: %d   beauty: %d\n",lines[curI].start,lines[curI].end,tailLength, numberOfHair, maxBeauty);
     }    
     
-    visited[curI] = 1;
-    
-    for(int i=0;i<nLines;i++)
+    for(int i=curI+1;i<nLines && lines[i].start <= lines[curI].end;i++)
     {
-        if(lines[i].start==lines[curI].end &&           
-            visited[i]==0)
+        if(lines[i].start==lines[curI].end && lines[i].maxTail<=tailLength+1)
         {
             findBeauty(i, tailLength);
         }
     }
-    
-    visited[curI] = 0;
 }
 
 #ifdef REPLACE_MAIN
@@ -64,7 +49,7 @@ int main_615b()
 int main()
 #endif
 {
-    memset(visited, 0, sizeof(int) * 200000);
+    memset(pointCounts, 0, sizeof(int) * 100000);
     
     scanf("%d %d", &nPoints, &nLines);
     
@@ -79,11 +64,67 @@ int main()
             lines[i].end = lines[i].start;
             lines[i].start = temp;
         }
+        lines[i].maxTail = 0;
     }
     
+    sort(lines, lines + nLines, [] (Line &l0, Line &l1) 
+        { return l0.end < l1.end; });
+
+    
+    int prevValue = lines[0].end;
+    int count = 0;
+    
     for(int i=0;i<nLines;i++)
-    {        
-        findBeauty(i,0);        
+    {   
+        if(lines[i].end!=prevValue)
+        {
+            pointCounts[prevValue] = count;
+            
+            count = 1;
+            prevValue = lines[i].end;
+        }
+        else
+        {
+            count++;    
+        }
+    }
+    
+    pointCounts[prevValue]=count;
+    
+    
+    
+    sort(lines, lines + nLines, [] (Line &l0, Line &l1) 
+        { return l0.start < l1.start; });
+    
+    
+    
+    prevValue = lines[0].start;
+    count = 0;
+    
+    for(int i=0;i<nLines;i++)
+    {   
+        if(lines[i].start!=prevValue)
+        {
+            pointCounts[prevValue] += count;
+            
+            count = 1;
+            prevValue = lines[i].start;
+        }
+        else
+        {
+            count++;    
+        }
+    }
+    
+    pointCounts[prevValue] += count;
+    
+    
+    for(int i=0;i<nLines;i++)
+    {   
+        if(lines[i].maxTail == 0)
+        {
+            findBeauty(i,0);
+        }
     }    
     
     printf("%d",maxBeauty);
