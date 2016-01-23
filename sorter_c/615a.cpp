@@ -3,7 +3,11 @@
 
 using namespace std;
 
+#ifdef MAIN
+int main()
+#else
 int main_615a()
+#endif
 {
     int nLamps, nButs;    
     cin >>nButs;

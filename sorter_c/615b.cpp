@@ -13,7 +13,6 @@ struct Line{
 
 Line *lines;
 
-
 int nPoints, nLines;
 
 int pointCounts[100001];
@@ -116,8 +115,7 @@ int main()
         }
     }
     
-    pointCounts[prevValue] += count;
-    
+    pointCounts[prevValue] += count;    
     
     for(int i=0;i<nLines;i++)
     {   
