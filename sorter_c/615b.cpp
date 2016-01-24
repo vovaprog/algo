@@ -16,6 +16,7 @@ Line *lines;
 int nPoints, nLines;
 
 int pointCounts[100001];
+int pointIndexes[100001];
 
 
 void findBeauty(int curI, int tailLength)
@@ -32,8 +33,8 @@ void findBeauty(int curI, int tailLength)
         
         //printf("MAX Beauty s: %d   e: %d   l: %d   h: %d   beauty: %d\n",lines[curI].start,lines[curI].end,tailLength, numberOfHair, maxBeauty);
     }    
-    
-    for(int i=curI+1;i<nLines && lines[i].start <= lines[curI].end;i++)
+       
+    for(int i=pointIndexes[lines[curI].end];i<nLines && lines[i].start <= lines[curI].end;i++)
     {
         if(lines[i].start==lines[curI].end && lines[i].maxTail<=tailLength+1)
         {
@@ -100,6 +101,8 @@ int main()
     prevValue = lines[0].start;
     count = 0;
     
+    pointIndexes[prevValue] = 0;
+    
     for(int i=0;i<nLines;i++)
     {   
         if(lines[i].start!=prevValue)
@@ -108,6 +111,8 @@ int main()
             
             count = 1;
             prevValue = lines[i].start;
+            
+            pointIndexes[prevValue] = i;
         }
         else
         {
