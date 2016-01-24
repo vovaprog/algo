@@ -308,13 +308,43 @@ int main()
     
     pointCounts[prevValue] += count;    
     
-    for(int i=0;i<nLines;i++)
+    /*for(int i=0;i<nLines;i++)
     {   
         if(lines[i].maxTail == 0)
         {
             findBeauty(i,0);
         }
-    }    
+    } */
+    
+    for(int curI=0;curI<nLines;curI++)
+    {
+        long long int curBeauty = (long long )pointCounts[lines[curI].end] * (long long )(lines[curI].maxTail+2);
+        
+        if(curBeauty > maxBeauty)
+        {
+            maxBeauty = curBeauty;    
+        }    
+
+        curBeauty = (long long )pointCounts[lines[curI].start] * (long long )(lines[curI].maxTail+1);
+        
+        if(curBeauty > maxBeauty)
+        {
+            maxBeauty = curBeauty;    
+        }
+        
+        
+        if(pointIndexes[lines[curI].end]!=0)
+        {
+            for(int i=pointIndexes[lines[curI].end];i<nLines && lines[i].start == lines[curI].end;i++)
+            {
+                if(lines[i].maxTail<lines[curI].maxTail+1)
+                {
+                    lines[i].maxTail = lines[curI].maxTail+1;
+                }
+            }
+        }
+            
+    }
     
     //printf("%l64d",maxBeauty);
     cout << maxBeauty;
