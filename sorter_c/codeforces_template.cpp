@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#ifdef MAIN
+#ifndef REPLACE_MAIN
 int main()
 #else
 int main_()
