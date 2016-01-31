@@ -1,8 +1,8 @@
 #!/bin/bash
 
-PROGRAM=610b
+PROGRAM=609c
 
-g++ -std=c++11 ./$PROGRAM.cpp -o ./$PROGRAM || exit 1
+g++ -g -std=c++11 ./$PROGRAM.cpp -o ./$PROGRAM || exit 1
 
 for i in ./test_data/$PROGRAM/*
 do
