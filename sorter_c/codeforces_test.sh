@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=621b
+PROGRAM=609e
 
 g++ -g -std=c++11 ./$PROGRAM.cpp -o ./$PROGRAM || exit 1
 
