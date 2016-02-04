@@ -68,10 +68,47 @@ int findMaxWeight(int start, int end, int maxWeight,int maxWeightResult)
     return maxWeightResult;
 }
 
+
+
+
+
+int p[100001], rankCount[100001];
+
+void initSet()
+{
+    for(int i=1;i<=100000;i++)
+    {
+        p[i] = i;
+        rankCount[i] = 0;
+    }
+}
+
+int find(int x) 
+{
+    return ( x == p[x] ? x : p[x] = find(p[x]) );
+}
+
+void unite(int x, int y) 
+{
+    if ( (x = find(x)) == (y = find(y)) )
+        return;
+    
+    if ( rankCount[x] <  rankCount[y] )
+        p[x] = y;
+    else
+        p[y] = x;
+
+    if ( rankCount[x] == rankCount[y] )
+        ++rankCount[x];    
+}
+
+
 int main()
 {
     int vCount, eCount;
     vector<Edge> edges;
+    
+    initSet();
     
     scanf("%d %d",&vCount, &eCount);
     
@@ -102,7 +139,7 @@ int main()
         printf("[%d,%d   %d]\n",e.v0,e.v1,e.weight);    
     } */   
     
-    map<int,int> vCounters;    
+    //map<int,int> vCounters;    
     
     
     //int i = eCount-1;
@@ -118,19 +155,15 @@ int main()
     {
         Edge& e = edges[i];
         
-        int v0Counter = vCounters[e.v0];
-        int v1Counter = vCounters[e.v1];
+        int foundNumber0 = find(e.v0);
+        int foundNumber1 = find(e.v1);
         
-        //printf("(%d,%d   %d,%d)\n",e.v0,e.v1,v0Counter,v1Counter);  
-        
-        if(v0Counter<1 || v1Counter<1)
+        if(foundNumber0!=foundNumber1)
         {
+            unite(e.v0, e.v1);
             tree.push_back(e);
-            edges.erase(edges.begin()+i);
-            
-            vCounters[e.v0]++;
-            vCounters[e.v1]++;
-        }                
+            edges.erase(edges.begin()+i);   
+        }
     }        
 
     long long int treeResult = 0;
@@ -142,7 +175,7 @@ int main()
     
     for(auto& e : tree)
     {        
-        printf("[%d,%d   %d]\n",e.v0,e.v1,e.weight);        
+        //printf("[%d,%d   %d]\n",e.v0,e.v1,e.weight);        
         treeResult += e.weight;
     }
 
@@ -156,7 +189,7 @@ int main()
     {
         //printf("[%d,%d   %d]\n",e.v0,e.v1,e.weight);    
         int maxWeight = findMaxWeight(e.v0,e.v1,0,0);
-        //printf("max %d   %d   %d\n",e.v0,e.v1, maxWeight);
+        //    ("max %d   %d   %d\n",e.v0,e.v1, maxWeight);
         e.result = treeResult - maxWeight + e.weight;
     }
     
