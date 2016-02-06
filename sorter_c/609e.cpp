@@ -19,6 +19,11 @@ struct Node{
     vector<int> links;
 };
 
+int vCount;
+
+int minNode=2000000000;
+int maxNode=0;
+
 vector<Edge> tree;
 
 Node nodes[200001];
@@ -26,6 +31,11 @@ Edge edges[200001];
 
 long long int results[200001];
 
+int dp[200001][18]={0};
+int dpWeight[200001][18]={0};
+
+
+/*
 inline int findMaxWeight(int n0, int n1)
 {
     int maxWeight = 0;
@@ -91,7 +101,7 @@ inline int findMaxWeight(int n0, int n1)
         if(e1.v0 == n1) n1 = e1.v1;
         else n1 = e1.v0;
     }    
-}
+}*/
 
 
 int p[200001], rankCount[200001];
@@ -154,11 +164,193 @@ int compareEdge( const void* al0, const void* al1)
     return ((Edge*)al1)->weight - ((Edge*)al0)->weight;    
 }
 
-bool test=false;
+/*inline int parentNode(int nodeIndex)
+{
+    Edge &e = tree[nodes[nodeIndex].parent];
+        
+    if(e.v0 == n0) return e.v1;
+    else return e.v0;    
+}*/
+
+inline int mylog2(int value)
+{
+    int counter = 0;
+    
+    while(true)
+    {
+        value = value >> 1;
+        if(value!=0)
+        {
+            ++counter;    
+        }
+        else break;
+    }
+    
+    return counter;
+}
+
+void printDpWeight(const char *title)
+{
+    /*printf("-------- %s ---------\n",title);
+    
+    for(int i=0;i<=vCount;i++)
+    {
+        for(int j=0;j<=mylog2(tree.size());j++)
+        {
+            printf("%d   ",dpWeight[i][j]);    
+        }
+        printf("\n");
+    }
+    printf("---------------------\n");*/
+}
+
+void lcaPreprocess()
+{
+    int treeSize = tree.size();
+    
+    for(int i=minNode;i<=maxNode;i++)
+    {
+        if(nodes[i].links.size()>0)
+        {
+            int parentNode;
+            
+            if(nodes[i].parent>=0)
+            {            
+                Edge &e = tree[nodes[i].parent];
+                
+                if(e.v0 == i) parentNode = e.v1;
+                else parentNode = e.v0;    
+        
+                //printf("|%d, %d|\n", e.v0,e.v1);
+                
+                dp[i][0] = parentNode;
+                dpWeight[i][0] = e.weight;
+            }
+            else
+            {
+                //printf("||%d||\n", i);
+                dp[i][0] = i;
+                dpWeight[i][0] = 0;
+            }
+        }
+    }
+    
+    /*cout <<"323232"<<endl;
+    cout <<minNode<<"   "<<maxNode<<endl;
+    return;*/
+    
+    printDpWeight("set first col");
+    
+    int logValue = mylog2(treeSize);
+        
+    for(int j=1;j<=logValue;j++)        
+    {
+        //for(int i=0;i<treeSize;i++)
+        //{
+        for(int i=minNode;i<=maxNode;i++)
+        {
+            if(nodes[i].links.size()>0)
+            {
+                int weightPrev = dpWeight[i][j-1];
+                int weightNext = dpWeight[ dp[i][j - 1] ]   [j - 1];
+                            
+                //printf("(%d, %d) ",weightPrev,weightNext);
+                
+                if(weightPrev > weightNext ) dpWeight[i][j] = weightPrev;
+                else dpWeight[i][j] = weightNext;
+                
+                dp[i][j] = dp[ dp[i][j - 1] ]   [j - 1];    
+            }
+        }
+        //printf("\n");
+    }
+}
+
+int lcaFindMaxWeight(int v, int u)
+{
+    //printf("lcaFindMaxWeight %d, %d\n",v,u);
+    
+    if(nodes[v].depth > nodes[u].depth)
+    {
+        int temp = v;
+        v = u;
+        u = temp;
+    }
+
+    int logValue = mylog2(tree.size()); 
+    
+    int maxWeight = 0;
+    
+    if(nodes[u].depth!=nodes[v].depth)
+    {
+        for(int i = logValue;i>=0;i--)
+        {
+            //printf("depth %d   %d\n",nodes[u].depth, nodes[v].depth);
+            if(nodes[u].depth - nodes[v].depth>=(1<<i))
+            {
+                if(dpWeight[u][i]>maxWeight)
+                {
+                    maxWeight = dpWeight[u][i];
+                    //printf("max 1: %d\n",maxWeight);
+                }
+    
+                //printf("u before %d   ",u);            
+                u=dp[u][i];
+                //printf("u after %d\n",u);
+            }
+        }
+    }
+    
+    if(u==v) return maxWeight;
+    
+    int i;
+    for(i = logValue;i>=0;--i)
+    {
+        if(dp[v][i]!=dp[u][i])
+        {
+            if(dpWeight[u][i]>maxWeight)
+            {
+                maxWeight = dpWeight[u][i];  
+                //printf("max 2: %d\n",maxWeight);
+            }
+            if(dpWeight[v][i]>maxWeight)
+            {
+                maxWeight = dpWeight[v][i];   
+                //printf("max 3: %d\n",maxWeight);
+            }                        
+            v = dp[v][i];
+            u = dp[u][i];
+            
+            if(u==v)
+            {
+                return maxWeight;    
+            }
+        }
+        /*else
+        {
+            printf("else %d %d\n",   dp[v][i] ,dp[u][i]);
+        }*/
+    }
+        
+    //printf("max 4: %d   %d\n",dpWeight[v][0],maxWeight);
+    if(dpWeight[v][0]>maxWeight)        
+    {
+        maxWeight = dpWeight[v][0];    
+    }
+    if(dpWeight[u][0]>maxWeight)        
+    {
+        maxWeight = dpWeight[u][0];    
+    }
+    
+    
+    return maxWeight;   
+}
+
+//bool test=false;
 
 int main()
 {
-    int vCount, eCount;
+    int eCount;
     
     initSet();
     
@@ -169,12 +361,12 @@ int main()
         return 0;    
     }    
     
-    if(eCount==199997)
+    /*if(eCount==199997)
     {
         test=true;
-    }
+    }*/
     
-    int minNode=2000000000;
+    
     
     for(int i=0;i<eCount;i++)
     {
@@ -185,7 +377,20 @@ int main()
         if(e.v0<minNode)
         {
             minNode = e.v0;    
-        }                   
+        }        
+        if(e.v0>maxNode)
+        {
+            maxNode = e.v0;    
+        }
+        
+        if(e.v1<minNode)
+        {
+            minNode = e.v1;    
+        }        
+        if(e.v1>maxNode)
+        {
+            maxNode = e.v1;    
+        }        
     }
     
     qsort( edges, eCount, sizeof(Edge), compareEdge );
@@ -233,18 +438,29 @@ int main()
     walkTree(minNode, -1, 0);
      
     
-    if(test)
+    /*if(test)
     {
         cout <<"31313131"<<endl;
         cout <<tree.size()<<endl;
         cout <<bigs.size()<<endl;
         return 0;
-    }
+    }*/
+
         
+    lcaPreprocess();
+
+    /*cout <<"31313131"<<endl;
+    
+    return 0;*/
+
+    
+    printDpWeight("finish");
+    
 
     for(auto &e : bigs)
     {
-        int maxWeight = findMaxWeight(e.v0,e.v1);
+        //int maxWeight = findMaxWeight(e.v0,e.v1);
+        int maxWeight = lcaFindMaxWeight(e.v0,e.v1);
         
         results[e.number] = treeResult - maxWeight + e.weight;
     }
