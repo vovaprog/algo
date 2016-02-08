@@ -3,6 +3,7 @@
 #include <vector>
 #include <set>
 #include <stdarg.h>
+#include <map>
 
 using namespace std;
 
@@ -29,15 +30,17 @@ void debug(const char *format, ...)
 }
 
 //set<int>*
-void walkTree(int cur, int parent, set<int> *nextSet, set<int> *nextDirectImps)
+void walkTree(int cur, int parent, vector<int> *nextSet, vector<int> *nextDirectImps)
 {
-    debug("\n\nwalkTree( %d, %d )\n", cur, parent);
+    //debug("\n\nwalkTree( %d, %d )\n", cur, parent);
     
     //set<int> *nextSet = new set<int>();    
     
-    set<int> *rs=new set<int>(), *directImps=new set<int>();
+    //set<int> *rs=new set<int>(), *directImps=new set<int>();
+    vector<int> rs, directImps;
     
-    int des[100000] = {0};
+    //int des[100000] = {0};
+    map<int,int> des;
     
     for(auto& link : towns[cur].links)
     {
@@ -45,30 +48,30 @@ void walkTree(int cur, int parent, set<int> *nextSet, set<int> *nextDirectImps)
         
         //set<int> *rs = new set<int>();
         
-        rs->clear();
-        directImps->clear();
-        walkTree(link, cur, rs, directImps);
+        rs.clear();
+        directImps.clear();
+        walkTree(link, cur, &rs, &directImps);
         
         
-        debug("\n\nreturn to walkTree( %d, %d )\n", cur, parent);
+        //debug("\n\nreturn to walkTree( %d, %d )\n", cur, parent);
         
-        for(auto &r : *rs)
+        for(auto &r : rs)
         {
             if(imps[r].count(cur)>0)
             {
-                debug("!!!!! ans inc A %d\n",r);
+                //debug("!!!!! ans inc A %d\n",r);
                 ans[r]++;
             }
             else
             {
-                debug("des inc %d\n",r);
+                //debug("des inc %d\n",r);
                 des[r]++;
             }            
         }
         
         //delete rs;
         
-        for(auto &r : *directImps)
+        for(auto &r : directImps)
         {
             if(imps[r].count(cur)>0)
             {
@@ -79,11 +82,11 @@ void walkTree(int cur, int parent, set<int> *nextSet, set<int> *nextDirectImps)
         //delete directImps;
     }   
     
-    delete rs;delete directImps;
+    //delete rs;delete directImps;
         
     for(int r = 0;r<nPlans;r++)
     {
-        debug("iter plan %d   cur %d\n",r, cur);
+        //debug("iter plan %d   cur %d\n",r, cur);
         /*for(auto &s : imps[r])
         {
             printf("<%d> ",s);    
@@ -93,18 +96,20 @@ void walkTree(int cur, int parent, set<int> *nextSet, set<int> *nextDirectImps)
         
         if(des[r]>1)
         {
-            debug("!!!!! ans inc B %d\n",r);
+            //debug("!!!!! ans inc B %d\n",r);
             ans[r]++;    
         }
         else if(des[r]==1 || imps[r].count(cur)>0)            
         {
-            debug("next insert %d\n",r);
-            nextSet->insert(r);    
+            //debug("next insert %d\n",r);
+            //nextSet->insert(r);
+            nextSet->push_back(r);
         }
         
         if(imps[r].count(cur)>0)
         {
-            nextDirectImps->insert(r);    
+            //nextDirectImps->insert(r);
+            nextDirectImps->push_back(r);
         }
     }
     
@@ -137,19 +142,19 @@ int main()
         {            
             scanf("%d",&imp);
             --imp;
-            debug("plan %d   imp %d\n",q, imp);
+            //debug("plan %d   imp %d\n",q, imp);
             imps[q].insert(imp);    
         }        
     }
     
     
     
-    set<int> s0,s1;
+    vector<int> s0,s1;
     
     walkTree(0, 0, &s0, &s1);
     //delete ret;
     
-    debug("result: ");
+    //debug("result: ");
     for(int i=0;i<nPlans;i++)
     {
         if(impossible[i])
