@@ -4,17 +4,21 @@
 #include <set>
 #include <stdarg.h>
 #include <map>
+#include <algorithm>
 
 using namespace std;
 
 
-struct Town{
+/*struct Town{
     vector<int> links;    
-};
+};*/
 
-Town towns[100000];
+//Town towns[100000];
+
+vector<int> towns[100000];
 
 set<int> imps[100000];
+vector<int> impsByTown[100000];
 
 int ans[100000] = {0};
 int impossible[100000] = {0};
@@ -29,91 +33,48 @@ void debug(const char *format, ...)
     va_end(args);*/            
 }
 
-//set<int>*
-void walkTree(int cur, int parent, vector<int> *nextSet, vector<int> *nextDirectImps)
+map<int,int> des[100000];
+
+set<int>* walkTree(int cur, int parent)
 {
-    //debug("\n\nwalkTree( %d, %d )\n", cur, parent);
+    set<int> *nextSet=new set<int>();
     
-    //set<int> *nextSet = new set<int>();    
-    
-    //set<int> *rs=new set<int>(), *directImps=new set<int>();
-    vector<int> rs, directImps;
-    
-    //int des[100000] = {0};
-    map<int,int> des;
-    
-    for(auto& link : towns[cur].links)
+    for(auto& link : towns[cur])
     {
         if(link == parent) continue;
-        
-        //set<int> *rs = new set<int>();
-        
-        rs.clear();
-        directImps.clear();
-        walkTree(link, cur, &rs, &directImps);
-        
-        
-        //debug("\n\nreturn to walkTree( %d, %d )\n", cur, parent);
-        
-        for(auto &r : rs)
+                
+        set<int> *rs = walkTree(link, cur);
+                
+        for(auto &r : *rs)
         {
-            if(imps[r].count(cur)>0)
+            if(imps[r].find(cur)!=imps[r].end())
             {
-                //debug("!!!!! ans inc A %d\n",r);
                 ans[r]++;
             }
             else
             {
-                //debug("des inc %d\n",r);
-                des[r]++;
+                int desValue = ++des[cur][r];
+                if(desValue==1)
+                {
+                    nextSet->insert(r);
+                }
+                else if(desValue==2)
+                {
+                    ans[r]++;
+                    nextSet->erase(r);
+                }
             }            
         }
         
-        //delete rs;
-        
-        for(auto &r : directImps)
-        {
-            if(imps[r].count(cur)>0)
-            {
-                impossible[r] = 1;    
-            }
-        }
-        
-        //delete directImps;
+        delete rs;
     }   
-    
-    //delete rs;delete directImps;
-        
-    for(int r = 0;r<nPlans;r++)
+            
+    for(auto &r : impsByTown[cur])
     {
-        //debug("iter plan %d   cur %d\n",r, cur);
-        /*for(auto &s : imps[r])
-        {
-            printf("<%d> ",s);    
-        }
-        printf("\n");*/
-        
-        
-        if(des[r]>1)
-        {
-            //debug("!!!!! ans inc B %d\n",r);
-            ans[r]++;    
-        }
-        else if(des[r]==1 || imps[r].count(cur)>0)            
-        {
-            //debug("next insert %d\n",r);
-            //nextSet->insert(r);
-            nextSet->push_back(r);
-        }
-        
-        if(imps[r].count(cur)>0)
-        {
-            //nextDirectImps->insert(r);
-            nextDirectImps->push_back(r);
-        }
+        nextSet->insert(r);
     }
     
-    //return nextSet;
+    return nextSet;
 }
 
 int main()
@@ -127,8 +88,8 @@ int main()
         int t0, t1;
         scanf("%d %d", &t0, &t1);
         --t0;--t1;
-        towns[t0].links.push_back(t1);
-        towns[t1].links.push_back(t0);        
+        towns[t0].push_back(t1);
+        towns[t1].push_back(t0);        
     }
         
     scanf("%d",&nPlans);
@@ -142,19 +103,26 @@ int main()
         {            
             scanf("%d",&imp);
             --imp;
-            //debug("plan %d   imp %d\n",q, imp);
-            imps[q].insert(imp);    
+            imps[q].insert(imp);
+            impsByTown[imp].push_back(q);
+            
+            const auto &impsEnd = imps[q].end();
+            
+            for(auto &t : towns[imp])
+            {
+                if(imps[q].find(t)!=impsEnd)
+                {
+                    impossible[q] = 1;                    
+                    break;
+                }                    
+            }
         }        
     }
     
+     
     
-    
-    vector<int> s0,s1;
-    
-    walkTree(0, 0, &s0, &s1);
-    //delete ret;
-    
-    //debug("result: ");
+    walkTree(0, 0);
+
     for(int i=0;i<nPlans;i++)
     {
         if(impossible[i])
