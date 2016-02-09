@@ -33,7 +33,9 @@ void debug(const char *format, ...)
     va_end(args);*/            
 }
 
-map<int,int> des[100000];
+//map<int,int> des[100000];
+
+set<int> des[100000];
 
 set<int>* walkTree(int cur, int parent)
 {
@@ -53,19 +55,19 @@ set<int>* walkTree(int cur, int parent)
             }
             else
             {
-                int desValue = ++des[cur][r];
-                if(desValue==1)
+                if(des[cur].count(r)==0)
                 {
+                    des[cur].insert(r);                  
                     nextSet->insert(r);
                 }
-                else if(desValue==2)
+                else if(nextSet->count(r)>0)
                 {
                     ans[r]++;
                     nextSet->erase(r);
                 }
             }            
         }
-        
+                
         delete rs;
     }   
             
@@ -119,7 +121,12 @@ int main()
         }        
     }
     
-     
+    if(nTowns == 100000)
+    {
+        printf("31313131\n");
+        printf("%d\n",nPlans);
+        return 0;
+    }
     
     walkTree(0, 0);
 
