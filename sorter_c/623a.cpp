@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include <set>
+#include <vector>
 #include <string.h>
 #include <stdarg.h>
 #include <algorithm>
 
 using namespace std;
 
-set<int> vs[500];
+vector<int> vs[500];
 char result[501] = {0};
 
 int main()
@@ -22,8 +22,8 @@ int main()
         
         --v0;
         --v1;
-        vs[v0].insert(v1);
-        vs[v1].insert(v0);
+        vs[v0].push_back(v1);
+        vs[v1].push_back(v0);
     }
     
     int i;
@@ -31,8 +31,6 @@ int main()
     {
         result[i] = 'b';        
     }
-    
-    int aLinks = 0, cLinks = 0;
     
     if(i<vCount)
     {
@@ -49,7 +47,6 @@ int main()
                 else
                 {
                     result[link] = 'a';
-                    aLinks++;
                 }
             }
         }
@@ -67,7 +64,6 @@ int main()
                     if(result[link]==0)
                     {                        
                         result[link] = 'c';
-                        cLinks++;
                     }
                     else
                     {
@@ -84,45 +80,36 @@ int main()
         printf("No\n");      
         return 0;
     }
+
+    int aLinks = -1, cLinks = -1;
     
     for(int i=0;i<vCount;i++)
     {
         int counter=0;
         if(result[i]=='a')
         {
-            for_each(vs[i].begin(),vs[i].end(), 
-                [vCount, &counter](int link)
-                {
-                    if(vs[link].size()<vCount - 1)
-                    {
-                        counter++;
-                    }
-                 });                        
-                        
-            if(counter!=aLinks)
+            if(aLinks == -1)
+            {
+                aLinks = vs[i].size();
+            }
+            else if(vs[i].size()!=aLinks)
             {
                 printf("No\n");
                 return 0;
-            }            
+            }
         }
         else if(result[i]=='c')
         {
-            for_each(vs[i].begin(),vs[i].end(), 
-                [vCount, &counter](int link)
-                {
-                    if(vs[link].size()<vCount - 1)
-                    {
-                        counter++;
-                    }
-                 });                        
-                                   
-            if(counter!=cLinks)
+            if(cLinks == -1)
+            {
+                cLinks = vs[i].size();
+            }
+            else if(vs[i].size()!=cLinks)
             {
                 printf("No\n");
                 return 0;
-            }            
+            }
         }
-
     }
     
     printf("Yes\n%s",result);        
