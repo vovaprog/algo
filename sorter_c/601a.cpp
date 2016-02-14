@@ -1,37 +1,36 @@
 #include <stdio.h>
 #include <vector>
 #include <stdarg.h>
+#include <deque>
 
 using namespace std;
 
 vector<int> rails[4000];
 vector<int> roads[4000];
 
-int pathWeights[4000];
-int trace[4000];
-bool visited[4000];
-
 #define ROAD_WEIGHT 1
 
 void debug(const char *format, ...)
 {
-    /*va_list args;
+/*    va_list args;
     va_start(args, format);
     vprintf(format, args);
     va_end(args);*/            
 }
 
-bool dejkstra(vector<int> *vs, int nVs, int start, int end, vector<int> &path, vector<int> avoidPath)
+int pathWeights[4000];
+int trace[4000];
+bool visited[4000];
+
+bool dijkstra(vector<int> *vs, int nVs, int start, int end, deque<int> &path, deque<int> &avoidPath)
 {
-    debug("--- dejkstra ---\n");
-    
     for(int i=0;i<nVs;i++)
     {
         pathWeights[i] = -1;
         visited[i] = false;
     }
     pathWeights[start] = 0;
-
+    
     while(true)        
     {
         int minWeight = 2000000000;
@@ -46,10 +45,8 @@ bool dejkstra(vector<int> *vs, int nVs, int start, int end, vector<int> &path, v
                 curRoot = i;
             }
         }
-        
-        //======================================        
-        
-        debug("curRoot: %d\n",curRoot);
+                
+        //======================================                
         
         if(curRoot < 0)
         {
@@ -64,11 +61,7 @@ bool dejkstra(vector<int> *vs, int nVs, int start, int end, vector<int> &path, v
             {
                 curRoot = trace[curRoot];
                 if(curRoot==start) break;
-                path.push_back(curRoot);
-                for(int i=0;i<path.size()/2;i++)
-                {
-                    path[i] = path[path.size()-1-i];    
-                }
+                path.push_front(curRoot);
             }                        
             return true;    
         }
@@ -85,20 +78,8 @@ bool dejkstra(vector<int> *vs, int nVs, int start, int end, vector<int> &path, v
                 pathWeights[vs[curRoot][i]] = w;
                 trace[vs[curRoot][i]] = curRoot;
             }            
-        }        
+        }          
     }        
-}
-
-bool checkPaths(vector<int> &path0, vector<int> &path1)
-{
-    for(int i=(int)path0.size()-1,j=(int)path1.size()-1;j>=0 && i>=0;j--,i--)
-    {
-        if(path0[i]==path1[j])
-        {
-            return false;        
-        }
-    }
-    return true;
 }
 
 int main()
@@ -126,61 +107,57 @@ int main()
             {
                 roads[i].push_back(j);
                 roads[j].push_back(i);
-                debug("[%d, %d]\n",i,j);
             }
         }        
     }
     
-    //while(true)
-    {
-        vector<int> railPath;
-        vector<int> roadPath;
-        vector<int> emptyVector;
-        int result = 100500;
-        
-        if(dejkstra(rails, nTowns, 0, nTowns-1, railPath, emptyVector))
-        {        
-            if(dejkstra(roads, nTowns, 0, nTowns-1, roadPath, railPath))
-            {    
-                if(railPath.size()<roadPath.size())
-                {
-                    result = roadPath.size();    
-                }
-                else
-                {
-                    result = railPath.size();    
-                }
+    deque<int> railPath;
+    deque<int> roadPath;
+    int result = 100500;
+    
+    if(dijkstra(rails, nTowns, 0, nTowns-1, railPath, roadPath))
+    {        
+        if(dijkstra(roads, nTowns, 0, nTowns-1, roadPath, railPath))
+        {    
+            if(railPath.size()<roadPath.size())
+            {
+                result = roadPath.size();    
+            }
+            else
+            {
+                result = railPath.size();    
             }
         }
-        
-        if(dejkstra(roads, nTowns, 0, nTowns-1, roadPath, emptyVector))
-        {        
-            if(dejkstra(rails, nTowns, 0, nTowns-1, railPath, roadPath))
-            {    
-                if(railPath.size()<roadPath.size())
-                {
-                    if(roadPath.size()<result)
-                    {
-                        result = roadPath.size();
-                    }
-                }
-                else
-                {
-                    if(railPath.size()<result)
-                    {
-                        result = railPath.size();
-                    }
-                }
-            }
-        }
-        
-        if(result<=0 || result==100500)
-        {
-            result = -1;    
-        }
-        
-        printf("%d",result);
     }
+    
+    railPath.clear();
+    if(dijkstra(roads, nTowns, 0, nTowns-1, roadPath, railPath))
+    {        
+        if(dijkstra(rails, nTowns, 0, nTowns-1, railPath, roadPath))
+        {    
+            if(railPath.size()<roadPath.size())
+            {
+                if(roadPath.size()<result)
+                {
+                    result = roadPath.size();
+                }
+            }
+            else
+            {
+                if(railPath.size()<result)
+                {
+                    result = railPath.size();
+                }
+            }
+        }
+    }
+    
+    if(result==100500)
+    {
+        result = -1;    
+    }
+    
+    printf("%d",result);
     
     return 0;    
 }
