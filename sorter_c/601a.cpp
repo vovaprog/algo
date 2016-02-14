@@ -1,18 +1,30 @@
 #include <stdio.h>
 #include <vector>
+#include <stdarg.h>
 
 using namespace std;
 
 vector<int> rails[4000];
 vector<int> roads[4000];
-vector<int> weights[4000];
 
 int pathWeights[4000];
 int trace[4000];
 bool visited[4000];
 
-bool dejkstra(vector<int> *vs, vector<int> *weights, int nVs, int start, int end, vector<int> &path)
+#define ROAD_WEIGHT 1
+
+void debug(const char *format, ...)
 {
+    /*va_list args;
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);*/            
+}
+
+bool dejkstra(vector<int> *vs, int nVs, int start, int end, vector<int> &path, vector<int> avoidPath)
+{
+    debug("--- dejkstra ---\n");
+    
     for(int i=0;i<nVs;i++)
     {
         pathWeights[i] = -1;
@@ -27,7 +39,8 @@ bool dejkstra(vector<int> *vs, vector<int> *weights, int nVs, int start, int end
         
         for(int i=0;i<nVs;i++)
         {
-            if(!visited[i] && pathWeights[i]>=0 && pathWeights[i]<minWeight)
+            if(!visited[i] && pathWeights[i]>=0 && pathWeights[i]<minWeight &&
+                (avoidPath.size()<=pathWeights[i] || avoidPath[pathWeights[i]]!=i))
             {
                 minWeight = pathWeights[i];
                 curRoot = i;
@@ -36,7 +49,7 @@ bool dejkstra(vector<int> *vs, vector<int> *weights, int nVs, int start, int end
         
         //======================================        
         
-        printf("curRoot: %d\n",curRoot);
+        debug("curRoot: %d\n",curRoot);
         
         if(curRoot < 0)
         {
@@ -45,11 +58,17 @@ bool dejkstra(vector<int> *vs, vector<int> *weights, int nVs, int start, int end
 
         if(curRoot == end)
         {
+            path.clear();
             path.push_back(end);
             while(curRoot!=start)
             {
                 curRoot = trace[curRoot];
-                path.push_back(curRoot);                
+                if(curRoot==start) break;
+                path.push_back(curRoot);
+                for(int i=0;i<path.size()/2;i++)
+                {
+                    path[i] = path[path.size()-1-i];    
+                }
             }                        
             return true;    
         }
@@ -60,7 +79,7 @@ bool dejkstra(vector<int> *vs, vector<int> *weights, int nVs, int start, int end
         
         for(int i=0;i<vs[curRoot].size();i++)
         {
-            int w = pathWeights[curRoot] + weights[curRoot][i];
+            int w = pathWeights[curRoot] + ROAD_WEIGHT;
             if(pathWeights[vs[curRoot][i]]<0 || pathWeights[vs[curRoot][i]]>w)
             {
                 pathWeights[vs[curRoot][i]] = w;
@@ -68,6 +87,18 @@ bool dejkstra(vector<int> *vs, vector<int> *weights, int nVs, int start, int end
             }            
         }        
     }        
+}
+
+bool checkPaths(vector<int> &path0, vector<int> &path1)
+{
+    for(int i=(int)path0.size()-1,j=(int)path1.size()-1;j>=0 && i>=0;j--,i--)
+    {
+        if(path0[i]==path1[j])
+        {
+            return false;        
+        }
+    }
+    return true;
 }
 
 int main()
@@ -81,10 +112,8 @@ int main()
         int t0, t1;
         scanf("%d %d",&t0,&t1);
         --t0;--t1;
-        rails[t0].push_back(t1);
-        weights[t0].push_back(1);
+        rails[t0].push_back(t1);        
         rails[t1].push_back(t0);
-        weights[t1].push_back(1);
     }
     
     for(int i=0;i<nTowns;i++)
@@ -97,8 +126,7 @@ int main()
             {
                 roads[i].push_back(j);
                 roads[j].push_back(i);
-                weights[i].push_back(1);
-                printf("[%d, %d]\n",i,j);
+                debug("[%d, %d]\n",i,j);
             }
         }        
     }
@@ -107,33 +135,51 @@ int main()
     {
         vector<int> railPath;
         vector<int> roadPath;
+        vector<int> emptyVector;
+        int result = 100500;
         
-        dejkstra(rails, weights, nTowns, 0, nTowns-1, railPath);
-        printf("++++++++++++++++++\n\n");
-        
-        dejkstra(roads, weights, nTowns, 0, nTowns-1, roadPath);
-        
-        for(auto &r : railPath)
-        {
-            printf("%d   ",r);    
+        if(dejkstra(rails, nTowns, 0, nTowns-1, railPath, emptyVector))
+        {        
+            if(dejkstra(roads, nTowns, 0, nTowns-1, roadPath, railPath))
+            {    
+                if(railPath.size()<roadPath.size())
+                {
+                    result = roadPath.size();    
+                }
+                else
+                {
+                    result = railPath.size();    
+                }
+            }
         }
-
-        printf("\n=======\n");
         
-        for(auto &r : roadPath)
-        {
-            printf("%d   ",r);    
+        if(dejkstra(roads, nTowns, 0, nTowns-1, roadPath, emptyVector))
+        {        
+            if(dejkstra(rails, nTowns, 0, nTowns-1, railPath, roadPath))
+            {    
+                if(railPath.size()<roadPath.size())
+                {
+                    if(roadPath.size()<result)
+                    {
+                        result = roadPath.size();
+                    }
+                }
+                else
+                {
+                    if(railPath.size()<result)
+                    {
+                        result = railPath.size();
+                    }
+                }
+            }
         }
-        printf("\n");
         
-        if(railPath.size()<roadPath.size())
+        if(result<=0 || result==100500)
         {
-            printf("%d\n",roadPath.size()-1);    
+            result = -1;    
         }
-        else
-        {
-            printf("%d\n",railPath.size()-1);
-        }            
+        
+        printf("%d",result);
     }
     
     return 0;    
