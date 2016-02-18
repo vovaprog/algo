@@ -17,7 +17,7 @@ else:
         print(int(totalMoney / costPlastic))
     else:
         if costGlassWithRet == 1:
-            #print("C");
+            print("C");
             #print(int(costGlassReturn / costPlastic))
             if costGlassReturn >= costPlastic:
                 print(totalMoney - costGlass + 1 + int(costGlassReturn / costPlastic))
@@ -25,10 +25,15 @@ else:
                 print(totalMoney - costGlass + 1)
         else:
             if int((totalMoney - costGlass) / costGlassWithRet) > 0:
-                #print ("A")
-                #print(int((totalMoney - costGlass) / costGlassWithRet))
+                print ("A")
+                print(int((totalMoney - costGlass)))
+                print(costGlassWithRet)
+                print(int((totalMoney - costGlass) / costGlassWithRet))
+                print("---")
+                print(int((costGlass) / min(costGlass,costPlastic)) + int(costGlassReturn / costPlastic))
+                print(int(costGlassReturn / costPlastic))
                 #print(int((costGlass) / min(costGlass,costPlastic)))
                 print(int((totalMoney - costGlass) / costGlassWithRet) + int((costGlass) / min(costGlass,costPlastic)) + int(costGlassReturn / costPlastic))
             else:
-                #print ("B")
+                print ("B")
                 print(int((totalMoney - costGlass + costGlassWithRet) / min(costGlass,costPlastic)) + 1)
