@@ -11,29 +11,26 @@ costGlassReturn = read_int()
 costGlassWithRet = costGlass - costGlassReturn
 
 if totalMoney < costPlastic and totalMoney < costGlass:
-    print(0)
-else:    
-    if costPlastic <= costGlassWithRet:
-        print(int(totalMoney / costPlastic))
+    print(0)       
+else:
+    if costPlastic <= costGlassWithRet or costGlass > totalMoney:
+        print(totalMoney // costPlastic)
     else:
-        if costGlassWithRet == 1:
-            print("C");
-            #print(int(costGlassReturn / costPlastic))
-            if costGlassReturn >= costPlastic:
-                print(totalMoney - costGlass + 1 + int(costGlassReturn / costPlastic))
-            else:
-                print(totalMoney - costGlass + 1)
-        else:
-            if int((totalMoney - costGlass) / costGlassWithRet) > 0:
-                print ("A")
-                print(int((totalMoney - costGlass)))
-                print(costGlassWithRet)
-                print(int((totalMoney - costGlass) / costGlassWithRet))
-                print("---")
-                print(int((costGlass) / min(costGlass,costPlastic)) + int(costGlassReturn / costPlastic))
-                print(int(costGlassReturn / costPlastic))
-                #print(int((costGlass) / min(costGlass,costPlastic)))
-                print(int((totalMoney - costGlass) / costGlassWithRet) + int((costGlass) / min(costGlass,costPlastic)) + int(costGlassReturn / costPlastic))
-            else:
-                print ("B")
-                print(int((totalMoney - costGlass + costGlassWithRet) / min(costGlass,costPlastic)) + 1)
+        result = 0
+        
+        if costGlass<=totalMoney: 
+            result+=1
+        
+        v1 = (totalMoney - costGlass) // costGlassWithRet
+        v2 = (totalMoney - costGlass) % costGlassWithRet
+        v3 = v2 + costGlassReturn;
+        
+        if v3>=costGlass:
+            result += 1
+            v3 -= costGlassWithRet  
+        
+        result += v3 // costPlastic
+        
+        result += v1;
+        
+        print(result)

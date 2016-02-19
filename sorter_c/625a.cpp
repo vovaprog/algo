@@ -2,16 +2,18 @@
 
 using namespace std;
 
+typedef long long int int64;
+
 int main()
 {    
-    long long int totalMoney;
-    long long int costPlastic;
-    long long int costGlass;
-    long long int costGlassReturn;
+    int64 totalMoney;
+    int64 costPlastic;
+    int64 costGlass;
+    int64 costGlassReturn;
     
     cin >>totalMoney>>costPlastic>>costGlass>>costGlassReturn;
     
-    long long int costGlassWithRet = costGlass - costGlassReturn;
+    int64 costGlassWithRet = costGlass - costGlassReturn;
     
     if( totalMoney < costPlastic && totalMoney < costGlass)
     {
@@ -21,32 +23,33 @@ int main()
     {
         if(costPlastic <= costGlassWithRet || costGlass > totalMoney)
         {
-            cout <<((totalMoney / costPlastic));
+            cout << (totalMoney / costPlastic);
         }
         else
         {
-            if(costGlassWithRet == 1)
+            int64 result = 0;
+            
+            if(costGlass<=totalMoney) 
             {
-                if(costGlassReturn >= costPlastic)
-                {
-                    cout <<(totalMoney - costGlass + 1 + costGlassReturn / costPlastic);
-                }
-                else
-                {
-                    cout <<(totalMoney - costGlass + 1);
-                }
+                result+=1;
             }
-            else
+            
+            int64 v1 = (totalMoney - costGlass) / costGlassWithRet;
+            int64 v2 = (totalMoney - costGlass) % costGlassWithRet;
+            int64 v3 = v2 + costGlassReturn;
+            
+            if(v3>=costGlass)
             {
-                if(((totalMoney - costGlass) / costGlassWithRet) > 0)
-                {
-                    cout << (totalMoney - costGlass)/costGlassWithRet + 1 + costGlassReturn / costPlastic;
-                }
-                else
-                {
-                    cout <<(((totalMoney - costGlass + costGlassWithRet) / min(costGlass,costPlastic)) + 1);
-                }
+                result += 1;
+                v3 -= costGlassWithRet;  
             }
+            
+            result += v3 / costPlastic;
+            
+            result += v1;
+            
+            cout << result;
         }
     }
 }
+
