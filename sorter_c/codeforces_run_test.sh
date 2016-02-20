@@ -2,9 +2,17 @@
 
 PROGRAM=$1
 
-for i in ./test_data/$PROGRAM/*
+for i in ./test_data/$PROGRAM/*.txt
 do
-    echo $i
+    echo "====== $i ======"
     cat $i | ./$PROGRAM
-    echo
+    
+    if [ -f $i.answer ] 
+    then
+        echo     "============== answer =============="
+        cat $i.answer        
+    fi
+    
+    printf "\n====================================\n\n\n\n"
 done    
+
