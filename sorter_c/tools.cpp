@@ -29,3 +29,7 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 }
 
 
+usersEmplace.emplace(key, "abc");
+usersIndex[key] = User("abc");
+usersInsert.insert(pair<string,User>(key, User("abc")));
+
