@@ -1,24 +1,10 @@
-#include <stdio.h>
-#include <string.h>
-#include <vector>
-//#include <set>
-#include <unordered_set>
-#include <stdarg.h>
-#include <map>
-#include <algorithm>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-
-/*struct Town{
-    vector<int> links;    
-};*/
-
-//Town towns[100000];
-
 vector<int> towns[100000];
 
-unordered_set<int> imps[100000];
+set<int> imps[100000];
 vector<int> impsByTown[100000];
 
 int ans[100000] = {0};
@@ -34,42 +20,38 @@ void debug(const char *format, ...)
     va_end(args);*/            
 }
 
-//map<int,int> des[100000];
+set<int> stopped[100000];
 
-unordered_set<int> des[100000];
-
-unordered_set<int>* walkTree(int cur, int parent)
+set<int>* walkTree(int cur, int parent)
 {
-    unordered_set<int> *nextSet=new unordered_set<int>();
+    set<int> *nextSet=new set<int>();
     
     for(auto& link : towns[cur])
     {
         if(link == parent) continue;
                 
-        unordered_set<int> *rs = walkTree(link, cur);
-                
-        /*if(rs->size() > nextSet->size())
+        set<int> *rs = walkTree(link, cur);
+        
+        if(rs->size() > nextSet->size())
         {
-            swap(rs, nextSet);
-        }*/
+            swap(nextSet, rs);
+        }
         
         for(auto &r : *rs)
         {
-            if(imps[r].find(cur)!=imps[r].end())
-            {
+            if(imps[r].count(cur)!=0)
+            {                
                 ans[r]++;
             }
             else
             {
-                if(des[cur].count(r)==0)
-                {
-                    des[cur].insert(r);                  
-                    nextSet->insert(r);
+                if(nextSet->count(r)==0)
+                {                  
+                    nextSet->insert(r);                    
                 }
-                else if(nextSet->count(r)>0)
+                else
                 {
-                    ans[r]++;
-                    nextSet->erase(r);
+                    stopped[cur].insert(r);
                 }
             }            
         }
@@ -77,11 +59,21 @@ unordered_set<int>* walkTree(int cur, int parent)
         delete rs;
     }   
             
-    for(auto &r : impsByTown[cur])
+    for(auto &r : stopped[cur])
     {
-        nextSet->insert(r);
+        ans[r]++;
+        nextSet->erase(r);    
     }
     
+    for(auto &r : impsByTown[cur])
+    {
+        if(nextSet->count(r)) 
+        {
+            ans[r]++;
+        }
+        nextSet->insert(r);
+    }
+        
     return nextSet;
 }
 
@@ -126,14 +118,7 @@ int main()
             }
         }        
     }
-    
-    /*if(nTowns == 100000)
-    {
-        printf("31313131\n");
-        printf("%d\n",nPlans);
-        return 0;
-    }*/
-    
+        
     walkTree(0, 0);
 
     for(int i=0;i<nPlans;i++)
