@@ -1,10 +1,10 @@
 #!/bin/bash
 
-PROGRAM=343b
+PROGRAM=343a
 
 printf "\n\n\n\n\n\n\n\n"
 
-g++ -g -std=c++11 ./$PROGRAM.cpp -o ./$PROGRAM || exit 1
+g++ -std=c++11 -I. -include stdc++.h  -H -g -O2 ./$PROGRAM.cpp -o ./$PROGRAM || exit 1
 
 bash ./codeforces_run_test.sh $PROGRAM
 
