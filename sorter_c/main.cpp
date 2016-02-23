@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string.h>
+#include <algorithm>
 
 #include "small_utils.h"
 #include "SimpleProfiler.h"
@@ -72,6 +73,17 @@ int mostSignificantBit(int x)
     return bit;
 }
 
+class Town{
+public:
+    int id;
+    int weight;
+};
+
+bool operator<(const Town &t0, const Town &t1)
+{
+    return t0.weight < t1.weight; 
+}
+
 void speedTest(int *listOriginal,int listSize, int maxValue)
 {
     int *list=new int[listSize];
@@ -89,7 +101,7 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
         memcpy(list,listOriginal,listSize*sizeof(int));
         {
             SimpleProfiler sp("merge");
-            mergeSort(list,listSize);
+            mergeSortSimple(list,listSize);
         }        
         test_sort(list,listSize);
     }
@@ -141,6 +153,93 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
         }
         test_sort(list,listSize);
     }
+
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        {
+            SimpleProfiler sp("merge template");            
+            mergeSort(list,listSize);
+        }
+        test_sort(list,listSize);
+    }
+
+    {
+        Town *towns = new Town[listSize];
+        
+        for(int i=0;i<listSize;i++)
+        {
+            towns[i].id = listOriginal[i];
+            towns[i].weight = listOriginal[i];
+        }
+        
+        {
+            SimpleProfiler sp("merge template towns");            
+            mergeSort(towns,listSize);
+        }
+        
+        delete[] towns;
+    }
+
+    {
+        Town *towns = new Town[listSize];
+        
+        for(int i=0;i<listSize;i++)
+        {
+            towns[i].id = listOriginal[i];
+            towns[i].weight = listOriginal[i];
+        }
+        
+        {
+            SimpleProfiler sp("merge template towns new lambda");            
+            mergeSort(towns,listSize,
+                [](const Town &t0, const Town &t1)
+                {
+                    return t0.weight<t1.weight;
+                });
+        }
+        
+        delete[] towns;
+    }
+    
+    {
+        Town *towns = new Town[listSize];
+        
+        for(int i=0;i<listSize;i++)
+        {
+            towns[i].id = listOriginal[i];
+            towns[i].weight = listOriginal[i];
+        }
+        
+        {
+            SimpleProfiler sp("std sort towns");            
+            std::sort(towns,towns+listSize,
+                [](const Town &t0, const Town &t1)
+                {
+                    return t0.weight<t1.weight;
+                });
+        }
+        
+        delete[] towns;
+    }    
+    
+    {
+        vector<Town> towns(listSize);
+        
+        for(int i=0;i<listSize;i++)
+        {
+            towns[i].id = listOriginal[i];
+            towns[i].weight = listOriginal[i];
+        }
+        
+        {
+            SimpleProfiler sp("sort vector lambda");            
+            mergeSort(towns,
+                [](const Town &t0, const Town &t1)
+                {
+                    return t0.weight<t1.weight;
+                });
+        }        
+    }    
     
     delete list;
 }
@@ -187,8 +286,8 @@ void sortTest(int *list,int listSize)
 int main()
 {
     try{
-        const int listSize=1000000;
-        const int maxValue=10000;
+        const int listSize=10000000;
+        const int maxValue=100000;
         int *list=createList(listSize,maxValue);
         
         speedTest(list,listSize,maxValue);    

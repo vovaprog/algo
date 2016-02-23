@@ -1,7 +1,7 @@
 #pragma once
 
 void shellSort(int *list, int listSize);
-void mergeSort(int *list,int listSize);
+void mergeSortSimple(int *list,int listSize);
 void insertionSort(int *list,int listSize);
 void bubbleSort(int *list,int size);
 void heapSort(int *list, int listSize);
@@ -21,3 +21,6 @@ void testPrefixFunction();
 void testReverseNeighbors();
 
 void quickSort(int *list,int listSize);
+
+#include <merge_sort.h>
+

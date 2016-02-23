@@ -1,7 +1,7 @@
 
-int *mergeOutput;
+static int *mergeOutput;
 
-void merge(int *list,int start,int middle,int end)
+static void merge(int *list,int start,int middle,int end)
 {
     int i,j,outCounter=0;
     for(i=start,j=middle;i<middle && j<end;)
@@ -34,7 +34,7 @@ void merge(int *list,int start,int middle,int end)
     }
 }
 
-void mergeSort(int *list,int start, int end)
+static void mergeSort(int *list,int start, int end)
 {
     int listSize=end - start;
     
@@ -46,7 +46,7 @@ void mergeSort(int *list,int start, int end)
     }    
 }
 
-void mergeSort(int *list,int listSize)
+void mergeSortSimple(int *list,int listSize)
 {
     mergeOutput=new int[listSize];
     
