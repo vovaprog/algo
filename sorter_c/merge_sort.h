@@ -7,6 +7,13 @@
 template<class T, class Less>
 void merge(T *list, int start, int middle, int end, T *mergeOutput, Less compareLess)
 {
+    std::merge(list + start, list + middle, list + middle, list + end, mergeOutput, compareLess);
+    std::copy(mergeOutput, mergeOutput + end - start, list + start);
+}
+
+/*template<class T, class Less>
+void merge(T *list, int start, int middle, int end, T *mergeOutput, Less compareLess)
+{        
     int i, j, outCounter = 0;
     for(i = start, j = middle; i<middle && j<end; )
     {
@@ -35,7 +42,7 @@ void merge(T *list, int start, int middle, int end, T *mergeOutput, Less compare
     {
         list[i]=mergeOutput[outCounter++];
     }   
-}
+}*/
 
 template<class T, class Less>
 void mergeSort(T *list,int start, int end,T *mergeOutput, Less compareLess)

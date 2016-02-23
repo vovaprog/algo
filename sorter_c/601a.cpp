@@ -23,7 +23,7 @@ int trace[4000];
 bool visited[4000];
 
 bool dijkstra(vector<int> *vs, int nVs, int start, int end, deque<int> &path, deque<int> &avoidPath)
-{
+{    
     for(int i=0;i<nVs;i++)
     {
         pathWeights[i] = -1;
