@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string.h>
 #include <algorithm>
+#include <set>
 
 #include "small_utils.h"
 #include "SimpleProfiler.h"
@@ -240,6 +241,18 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
                 });
         }        
     }    
+    
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        {
+            SimpleProfiler sp("multiset");
+            multiset<int> s;
+            s.insert(list,list+listSize);
+            std::copy(s.begin(), s.end(), list);
+        }
+        test_sort(list,listSize);
+    }
+    
     
     delete list;
 }

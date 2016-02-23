@@ -10,6 +10,8 @@ void debug(const char *format, ...)
     va_end(args);*/            
 }
 
+#define debug(fmt,args...) printf(fmt,args);printf("   (%s)\n",#args);
+
 
 nextSet->insert(r);
 nextSet->erase(r);  
@@ -50,3 +52,24 @@ g++ -I. -include stdc++.h -H -g -O2 ./$PROGRAM.cpp -o ./$PROGRAM
 https://gcc.gnu.org/onlinedocs/libstdc++/manual/using_headers.html
 */	
 	
+===========================================================================================================
+
+#define debug(args...) { vector<string> _v = split(#args, ','); err(_v.begin(), args); }
+
+vector<string> split(const string& s, char c) {
+	vector<string> v;
+	stringstream ss(s);
+	string x;
+	while (getline(ss, x, c))
+		v.emplace_back(x);
+	return move(v);
+}
+
+void err(vector<string>::iterator it) {}
+template<typename T, typename... Args>
+void err(vector<string>::iterator it, T a, Args... args) {
+	cerr << it -> substr((*it)[0] == ' ', it -> length()) << " = " << a << '\n';
+	err(++it, args...);
+}
+
+
