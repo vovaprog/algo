@@ -67,18 +67,7 @@ int main()
         int minDist = 2000000000;
         
         int p = prevPairs[rqEnd];
-        /*for(;p>=0;)
-        {
-            if(pairs[p].start>=rqStart)
-            {
-                minDist = min(minDist,pairs[p].dist);
-                if(minDist==1)
-                {
-                    break;
-                }
-            }
-            p = prevPairs[pairs[p].end-1];            
-        } */
+        
         for(;p>=0 && pairs[p].end>rqStart;--p)
         {
             if(pairs[p].start>=rqStart)
