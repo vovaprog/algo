@@ -18,18 +18,12 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 
 struct Pair
 {
-    int start, end;
-    Pair(int start, int end): start(start), end(end)
+    int start, end, dist;
+    Pair(int start, int end): start(start), end(end), dist(end-start)
     {}
     Pair()
     {}
-}
-;
-
-bool operator<(const Pair &p0, const Pair &p1)
-{
-    return p0.end < p1.end;
-}
+};
 
 int main()
 {
@@ -43,109 +37,57 @@ int main()
         scanf("%d", &buf[i]);
     }
 
-    map<int, int> m;
-    map<int, Pair> pairs;
+    unordered_map<int, int> m;
+    vector<Pair> pairs;
+    pairs.reserve(sz);
+    
     int val;
-    int lastPairs[100000];
-    int lastPair = -1;
-
+    int prevPairs[100000];
+    int prevPair = -1;
+    
     for (int i = 0;i < sz;i++)
     {
         if (tryGetValue(m, buf[i], val))
         {
-            pairs[i] = Pair(val, i);
-            lastPair = i;
-        }
-        lastPairs[i] = lastPair;
+            pairs.emplace_back(val, i);
+            prevPair = pairs.size() - 1;
+        }        
         m[buf[i]] = i;
+        prevPairs[i] = prevPair;
     }
-
-    for (auto& p : pairs)
+   
+    for(int q=0;q<nRequests;q++)
     {
-        debug("<%d %d>", p.second.start, p.second.end);
-    }
-
-    debug("[%d]", pairs.size());
-
-    for (int q = 0;q < nRequests;q++)
-    {
-        int start, end;
-
-        scanf("%d %d", &start, &end);
-        --start;
-        --end;
-
-
-
-        auto iter = pairs.find(lastPairs[end]);
-
-        debug("=======%d", lastPairs[end]);
-        debug("-------%d %d", iter->second.start, iter->second.end);
-
-
-
-        if (iter == pairs.end())
+        int rqStart,rqEnd;
+        
+        scanf("%d %d",&rqStart, &rqEnd);
+        --rqStart;
+        --rqEnd;        
+        
+        int minDist = 2000000000;
+        
+        int p = prevPairs[rqEnd];
+        for(;p>=0;)
+        {
+            if(pairs[p].start>=rqStart)
+            {
+                minDist = min(minDist,pairs[p].dist);
+                if(minDist==1)
+                {
+                    break;
+                }
+            }
+            p = prevPairs[pairs[p].end-1];            
+        }        
+        
+        if(minDist==2000000000)
         {
             printf("-1\n");
         }
         else
         {
-            //auto riter = map<int,Pair>::reverse_iterator(iter);
-
-            //debug("+++++++%d %d",riter->second.start,riter->second.end);
-
-            int minDist = 2000000000;
-
-            bool exitLoop = false;
-            while (!exitLoop)
-            {
-                debug("///// %d %d", iter->second.start, iter->second.end);
-
-                if (iter->second.start >= start)
-                {
-                    minDist = min(minDist, iter->second.end - iter->second.start);
-                }
-
-                if (iter == pairs.begin())
-                    exitLoop = true;
-                --iter;
-            }
-
-
-
-            if (minDist == 2000000000)
-            {
-                printf("-1\n");
-            }
-            else
-            {
-                printf("%d\n", minDist);
-            }
-        }
-
-        /*        Pair p{start,end};
-                auto iter = upper_bound(pairs.begin(), pairs.end(),p);
-                        
-                int i = iter - pairs.begin() - 1;
-                
-                
-                
-                for(;i>=0 && pairs[i].end>start;i--)
-                {
-                    if(pairs[i].start>=start)
-                    {
-                        minDist = min(minDist, pairs[i].end - pairs[i].start);
-                    }            
-                }
-                
-                if(minDist==2000000000)
-                {
-                    printf("-1\n");
-                }
-                else
-                {
-                    printf("%d\n",minDist);
-                }*/
+            printf("%d\n",minDist);
+        }        
     }
 
     return 0;
