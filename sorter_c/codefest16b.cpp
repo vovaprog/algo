@@ -4,39 +4,52 @@ using namespace std;
 
 #define debug(fmt,args...) printf(fmt,args);printf("   (%s)\n",#args);
 
-typedef unsigned long long int int64;
-
-int64 fact(int64 x)
-{
-    int64 result=x;
-    for(int64 i=x-1;i>=2;i--)
-    {
-        result*=i;
-    }
-    return result;
-}
+typedef long long int int64;
 
 int main()
 {
-    int zeros;
+    int64 zeros;
+    
+    cin >> zeros;
     
     scanf("%d",&zeros);
     
-    int start = zeros * 5;
+    vector<int64> powers;
+    int64 v = 1, base = 5;
     
-    /*for(int i=start;i<start+5;i++)
+    for(int64 i=1;i<9;i++)
     {
-        printf("%d",i
-    }*/
-    
-    
-    for(int64 i=1;i<30;i++)
-    {
-        cout <<"fact("<<i<<")="<<fact(i)<<endl;        
+    	powers.push_back(v*=base);    
     }
     
+    int64 counter = 0;
     
-    
+    for(int64 i=1;;i++)
+    {      
+    	for(auto v : powers)
+    	{
+    		if(i % v==0)
+    		{
+    			counter++;	
+    		}
+    	}
+
+    	if(counter==zeros)
+    	{
+    		cout <<"5"<<endl;
+
+    		for(int j=i;j<i+5;j++)
+    		{
+    			cout <<j<<" ";
+    		}
+    		return 0;
+    	}
+    	else if(counter>zeros)
+    	{
+    		cout <<"0";
+    		return 0;
+    	}
+    }
     
     return 0;
 }
