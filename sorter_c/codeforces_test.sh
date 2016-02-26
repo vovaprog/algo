@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=codefest16a
+PROGRAM=codefest16b
 
 printf "\n\n\n\n\n\n\n\n"
 
