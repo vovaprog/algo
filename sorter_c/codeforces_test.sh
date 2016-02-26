@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=522d
+PROGRAM=codefest16a
 
 printf "\n\n\n\n\n\n\n\n"
 
