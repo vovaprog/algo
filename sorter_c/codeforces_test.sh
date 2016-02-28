@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=522d_3
+PROGRAM=522d_4
 
 printf "\n\n\n\n\n\n\n\n"
 
