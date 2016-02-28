@@ -32,11 +32,6 @@ int main()
 
     scanf("%d %d", &sz, &nRequests);
 
-    for (int i = 0;i < sz;i++)
-    {
-        scanf("%d", &buf[i]);
-    }
-
     unordered_map<int, int> m;
     vector<Pair> pairs;
     pairs.reserve(sz);
@@ -47,15 +42,17 @@ int main()
     
     for (int i = 0;i < sz;i++)
     {
+        scanf("%d", &buf[i]);
+        
         if (tryGetValue(m, buf[i], val))
         {
             pairs.emplace_back(val, i);
             prevPair = pairs.size() - 1;
         }        
         m[buf[i]] = i;
-        prevPairs[i] = prevPair;
+        prevPairs[i] = prevPair;        
     }
-   
+      
     for(int q=0;q<nRequests;q++)
     {
         int rqStart,rqEnd;
@@ -72,10 +69,10 @@ int main()
         {
             if(pairs[p].start>=rqStart)
             {
-                minDist = min(minDist,pairs[p].dist);
-                if(minDist==1)
+                if(pairs[p].dist<minDist)
                 {
-                    break;
+                    minDist = pairs[p].dist;
+                    if(minDist==1) break;
                 }
             }            
         }        
