@@ -19,8 +19,7 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 struct Pair
 {
     int start, end, index, minDist;
-    /*Pair(int start, int end): start(start), end(end), minDist(2000000000)
-    {}*/
+    
     Pair(int start, int end, int index): start(start), end(end), index(index), minDist(2000000000)
     {}    
     Pair(): minDist(2000000000)
@@ -29,8 +28,10 @@ struct Pair
 
 int comparePairs( const void* al0, const void* al1)
 {
-    return ((Pair*)al1)->start - ((Pair*)al0)->start;    
+    return ((Pair*)al0)->start - ((Pair*)al1)->start;    
 }
+
+int buf[500000];
 
 int main()
 {
@@ -39,14 +40,10 @@ int main()
     scanf("%d %d", &sz, &nRequests);
 
     unordered_map<int, int> m;
-    vector<Pair> pairs;
     vector<Pair> rqs;
-    pairs.reserve(sz);
-    rqs.reserve(sz);
+    rqs.reserve(nRequests);
     
     int val;
-    
-    int buf[500000];
     
     for (int i = 0;i < sz;i++)
     {
@@ -63,9 +60,8 @@ int main()
             buf[i] = 0;
         }
         m[b] = i;    
-        //printf("[%d]   ",buf[i]);
     }
-    //printf("\n");  
+
     
     for(int q=0;q<nRequests;q++)
     {
@@ -78,52 +74,47 @@ int main()
         rqs.emplace_back(rqStart,rqEnd,q);
     }
     
-    sort(rqs.begin(),rqs.end(),[](const Pair &p0,const Pair &p1)
+    /*sort(rqs.begin(),rqs.end(),[](const Pair &p0,const Pair &p1)
     	{
     		//return p0.end < p1.end;
     		return p0.start < p1.start;
-    	});
+    	});*/
+    	
+    qsort(rqs.data(),nRequests,sizeof(Pair),comparePairs);
     	
     int rqsHead = 0;
-    vector<int> curRqs;
+    list<int> curRqs;
     
     for(int i=0;i<sz;i++)
     {
-        //printf("--------- %d -----------\n",i);
-        
         while(rqsHead<rqs.size() && rqs[rqsHead].start==i)
         {
             curRqs.push_back(rqsHead++);           
-            debug("%d",rqsHead);
         }                
         
         if(curRqs.size()==0 && rqsHead>=rqs.size()) break;
         
-        debug("%d",buf[i]);
-        
         if(buf[i]>0)
         {
-            for(int j = curRqs.size()-1;j>=0;--j)
-            {
-                debug("%d %d %d",j,rqs[curRqs[j]].start,i);
-                
-                if(i>rqs[curRqs[j]].end)
+        	for(auto iter = curRqs.begin();iter!=curRqs.end();)
+        	{
+        		Pair &pr = rqs[*iter];
+        		
+        		if(i>pr.end)
                 {
-                    debug("--erase %d",j);
-                    curRqs.erase(curRqs.begin()+j);
+                    iter = curRqs.erase(iter);
                 }
-                else if(rqs[curRqs[j]].minDist>buf[i] && i-buf[i]>=rqs[curRqs[j]].start)
-                {   
-                    debug("min %d",j);
-                    rqs[curRqs[j]].minDist = buf[i];
-                }                
-            }
+                else
+                {
+                	if(pr.minDist>buf[i] && i-buf[i]>=pr.start)
+					{   
+						pr.minDist = buf[i];
+					}      		
+					++iter;
+				}
+        	}
         }        
-    }
-    
-    //qsort( rqs.data(), nRequests, sizeof(Pair), comparePairs );	
-    	        
-    
+    }    
     
     for(auto &rq : rqs)
     {
