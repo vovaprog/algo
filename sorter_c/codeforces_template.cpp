@@ -2,7 +2,9 @@
 
 using namespace std;
 
-#define debug(fmt,args...) printf(fmt,args);printf("   (%s)\n",#args);
+#define debug(args...) printf(args);
+#define debug2(fmt,args...) printf(fmt,args);printf("   (%s)\n",#args);
+
 
 int main()
 {
