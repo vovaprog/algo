@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=605a_3
+PROGRAM=cont_b
 
 printf "\n\n\n\n\n\n\n\n"
 
