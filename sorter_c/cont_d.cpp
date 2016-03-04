@@ -40,6 +40,8 @@ int64 compare(int64 tInd)
 		
 		for(t=tInd, s=0;t<tbs.size() && s<sbs.size();t++,s++)
 		{
+		    if(tbs[t].c != sbs[s].c) return 0;
+		    
 			if(s==0 || s==sbs.size()-1)
 			{
 				if(sbs[s].count>tbs[t].count) return 0;	
@@ -98,7 +100,7 @@ int main()
     	
     	if(i>0 && prevB.c == b.c)
     	{
-    		sbs[tbs.size()-1].count += b.count;    		
+    		sbs[sbs.size()-1].count += b.count;    		
     	}
     	else
     	{
