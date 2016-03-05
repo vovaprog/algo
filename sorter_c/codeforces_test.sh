@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=cont_d_2
+PROGRAM=631d_2
 
 printf "\n\n\n\n\n\n\n\n"
 

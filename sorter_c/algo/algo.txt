@@ -1,0 +1,3 @@
+631d_2
+Knuth–Morris–Pratt search
+
