@@ -120,9 +120,6 @@ int lcaFind(int v, int u)
     if(nodes[v].depth > nodes[u].depth)
     {
     	swap(v,u);
-        /*int temp = v;
-        v = u;
-        u = temp;*/
     }
 
     int logValue = mylog2(tree.size()); 
