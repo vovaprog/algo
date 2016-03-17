@@ -9,26 +9,26 @@ typedef long long int int64;
 
 int main()
 {
-    int n, qLimit;
+    int64 n, qLimit;
     
-    scanf("%d %d",&n, &qLimit);
+    cin >>n>>qLimit;
     
-    queue<int> output;
-    int negCount = 0;
-    int lastTime = 0;
+    queue<int64> output;
+    int64 negCount = 0;
+    int64 lastTime = 0;
     
-    for(int i = 0; i < n; ++i)
+    for(int64 i = 0; i < n; ++i)
     {
-        int t, d;
-        scanf("%d %d",&t, &d);
+        int64 t, d;
+        cin >>t>>d;
         
         while(output.size()>0)
         {
-        	int out = output.front();
+        	int64 out = output.front();
         	
         	if(out<=t)
         	{
-        		printf("%d ",out);        		
+        		cout <<out<<" ";
         		
         		if(out<0) --negCount;
         		
@@ -62,8 +62,8 @@ int main()
     
 	while(output.size()>0)
 	{
-		int out = output.front();
-		printf("%d ",out);
+		int64 out = output.front();
+		cout <<out <<" ";
 		output.pop();		
 	}
     

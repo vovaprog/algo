@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=557d
+PROGRAM=krok_b
 
 printf "\n\n\n\n\n\n\n\n"
 
