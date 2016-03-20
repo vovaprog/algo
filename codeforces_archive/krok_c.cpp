@@ -17,7 +17,7 @@ struct Server{
 };
 
 vector<Server> servers;
-map<size_t,int> serversMap;
+map<int64,int> serversMap;
 
 template<class TMap,class TKey,class TValue>
 inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
@@ -74,8 +74,8 @@ void prepare(string &s)
 	
 	//cout << s << "   "<<host<<"   "<<path<<endl;
 	
-	size_t hostHash = calcHash(host);
-	size_t pathHash = calcHash(path);
+	int64 hostHash = calcHash(host);
+	int64 pathHash = calcHash(path);
 	
 	int srvIndex;
 	
