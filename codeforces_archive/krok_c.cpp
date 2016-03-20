@@ -33,6 +33,8 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 
 //hash<string> hasher;
 
+map<int64,string> hashes;
+
 int64 calcHash(string &s)
 {
 	//const int p = 31;
@@ -47,6 +49,28 @@ int64 calcHash(string &s)
 		//hash += (s[i] + 1) * p_pow;
 		p_pow *= p;
 	}	
+	
+	//while(hashes.count(hash)!=0) ++hash;
+	
+	while(true)
+	{
+		string oldS;
+		if(tryGetValue(hashes,hash,oldS))
+		{
+			if(oldS!=s) ++hash;
+			else
+			{
+				hashes[hash]=s;
+				break;
+			}
+		}
+		else
+		{
+			hashes[hash]=s;
+			break;
+		}		
+	}
+	
 	return hash;
 }
 
