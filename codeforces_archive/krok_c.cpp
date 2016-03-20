@@ -124,6 +124,9 @@ void prepare(string &s)
 }
 
 map<int64,vector<int>> output;
+//vector<vector<int>> output;
+
+bool visited[100010]={0};
 
 int main()
 {
@@ -141,19 +144,41 @@ int main()
     	prepare(s);
     }
         
-    int outGroups=0;
+    //int outGroups=0;
         
-    for(int i=0;i<servers.size();++i)
+    /*for(int i=0;i<servers.size();++i)
     {
     	vector<int> &outV = output[servers[i].totalHash];
     	outV.push_back(i);
     	if(outV.size()==2) outGroups++;
-    	//cout << servers[i].totalHash<<"   ";
     }
-    //cout <<endl;
-    //return 0;
     
-    cout <<outGroups<<endl;
+    cout <<outGroups<<endl;*/
+
+    
+    
+    for(int i=0;i<servers.size();i++)
+    {
+        if(!visited[i])
+        {
+            for(int j=i+1;j<servers.size();++j)
+            {
+                if(!visited[j])
+                {
+                    if(servers[i].paths == servers[j].paths)
+                    {
+                        vector<int>& v = output[i];
+                        if(v.size()==0) v.push_back(i);
+                        v.push_back(j);
+                        visited[i]=true;
+                        visited[j]=true;
+                    }
+                }
+            }
+        }
+    }
+    
+    cout <<output.size()<<endl;
     
     /*if(outGroups>40000)
     {
