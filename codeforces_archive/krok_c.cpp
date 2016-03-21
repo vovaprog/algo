@@ -11,7 +11,7 @@ typedef long long int int64;
 struct Server{
 	int64 host;
 	string hostString;
-	string totalString;
+	//string totalString;
 	set<int64> paths;
 	int64 totalHash=0;
 };
@@ -108,7 +108,7 @@ void prepare(string &s)
 		if(servers[srvIndex].paths.count(pathHash)==0)
 		{
 			servers[srvIndex].paths.insert(pathHash);
-			servers[srvIndex].totalHash += pathHash;			
+			//servers[srvIndex].totalHash += pathHash;			
 		}
 	}
 	else
@@ -116,17 +116,56 @@ void prepare(string &s)
 		servers.emplace_back();
 		Server &srv = servers[servers.size()-1];
 		srv.hostString = s.substr(0,pos);
-		srv.totalString = s;
+		//srv.totalString = s;
 		srv.paths.insert(pathHash);
-		srv.totalHash = pathHash;
+		//srv.totalHash = pathHash;
 		serversMap[hostHash] = servers.size()-1;
 	}
 }
 
 map<int64,vector<int>> output;
 //vector<vector<int>> output;
+//vector<int> output[100010];
 
 bool visited[100010]={0};
+
+map<int64,int> totalHashes;
+
+void calcTotalHash(int serverIndex)
+{
+    Server &srv = servers[serverIndex];
+    
+	const int p = 239017;
+	//long long hash = 0, p_pow = 1;
+	int64 hash = 0, p_pow = 1;
+	
+	for(int64 pathHash : srv.paths)
+	{
+	    hash += (pathHash - 'a' + 1) * p_pow;
+	    p_pow *= p;
+	}
+	
+	while(true)
+	{
+		int ind;
+		if(tryGetValue(totalHashes,hash,ind))
+		{
+			if(servers[ind].paths!=srv.paths) ++hash;
+			else
+			{
+				totalHashes[hash]=serverIndex;
+				break;
+			}
+		}
+		else
+		{
+			totalHashes[hash]=serverIndex;
+			break;
+		}		
+	}	
+	
+	srv.totalHash = hash;
+}
 
 int main()
 {
@@ -144,18 +183,21 @@ int main()
     	prepare(s);
     }
         
-    //int outGroups=0;
+    int outGroups=0;
         
-    /*for(int i=0;i<servers.size();++i)
+    for(int i=0;i<servers.size();++i)
     {
+        calcTotalHash(i);
+        
     	vector<int> &outV = output[servers[i].totalHash];
     	outV.push_back(i);
     	if(outV.size()==2) outGroups++;
     }
     
-    cout <<outGroups<<endl;*/
+    cout <<outGroups<<endl;
 
     
+    /*int outGroups=0;
     
     for(int i=0;i<servers.size();i++)
     {
@@ -165,20 +207,26 @@ int main()
             {
                 if(!visited[j])
                 {
-                    if(servers[i].paths == servers[j].paths)
+                    if(servers[i].totalHash == servers[j].totalHash)
                     {
-                        vector<int>& v = output[i];
-                        if(v.size()==0) v.push_back(i);
-                        v.push_back(j);
-                        visited[i]=true;
-                        visited[j]=true;
+                        if(servers[i].paths == servers[j].paths)
+                        {
+                            vector<int>& v = output[i];
+                            if(v.size()==0) v.push_back(i);
+                            v.push_back(j);
+                            visited[i]=true;
+                            visited[j]=true;
+                            
+                            if(v.size()==2) outGroups++;
+                        }
                     }
                 }
             }
         }
     }
     
-    cout <<output.size()<<endl;
+    //cout <<output.size()<<endl;
+    cout <<outGroups<<endl;*/
     
     /*if(outGroups>40000)
     {
@@ -229,7 +277,18 @@ int main()
 				cout << endl;
 			}
 		}
-    
+		
+		/*for(auto &v : output)
+		{
+		    if(v.size()>1)
+		    {
+		        for(auto &h : v)
+				{
+					cout << servers[h].hostString<<" ";
+				}
+				cout << endl;
+		    }
+		}*/    
     }
     
     return 0;

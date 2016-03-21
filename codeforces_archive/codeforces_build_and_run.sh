@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=vk_b
+PROGRAM=krok_c
 
 printf "\n\n\n\n\n\n\n\n"
 
