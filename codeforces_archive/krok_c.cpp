@@ -6,18 +6,18 @@ using namespace std;
 #define debug2(fmt,args...) printf(fmt,args);printf("   (%s)\n",#args);
 
 typedef long long int int64;
-//typedef unsigned long long int u64;
 
 struct Server{
 	int64 host;
 	string hostString;
-	//string totalString;
 	set<int64> paths;
 	int64 totalHash=0;
 };
 
 vector<Server> servers;
 map<int64,int> serversMap;
+
+map<int64,vector<int>> output;
 
 template<class TMap,class TKey,class TValue>
 inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
@@ -31,38 +31,39 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
     return false;
 }
 
-//hash<string> hasher;
 
-map<int64,string> hashes;
+//=================================================================
+//====================== string hash ==============================
+//=================================================================
 
-int64 calcHash(string &s)
+map<int64,string> stringHashes;
+
+int64 calcStringHash(string &s)
 {
-	//const int p = 31;
 	const int p = 239017;
-	//long long hash = 0, p_pow = 1;
 	int64 hash = 0, p_pow = 1;
 	for (size_t i=0; i<s.length(); ++i)
 	{
-		// желательно отнимать 'a' от кода буквы
-		// единицу прибавляем, чтобы у строки вида 'aaaaa' хэш был ненулевой
-		hash += (s[i] - 'a' + 1) * p_pow;
-		//hash += (s[i] + 1) * p_pow;
+		//add one, to make 'aaaaa' hash not zero
+		//hash += (s[i] - 'a' + 1) * p_pow;
+		
+		hash += (s[i] + 1) * p_pow;
 		p_pow *= p;
 	}	
 	
-	//while(hashes.count(hash)!=0) ++hash;
-	
 	while(true)
 	{
-		string oldS;
-		if(tryGetValue(hashes,hash,oldS))
+		string existingS;
+		if(tryGetValue(stringHashes,hash,existingS))
 		{
-			if(oldS!=s) ++hash;
-			else
-			{
-				hashes[hash]=s;
-				break;
-			}
+		    if(existingS==s)
+		    {
+		        break;    
+		    }
+		    else
+		    {
+		        ++hash;
+		    }
 		}
 		else
 		{
@@ -73,6 +74,66 @@ int64 calcHash(string &s)
 	
 	return hash;
 }
+
+//=================================================================
+//====================== string hash ==============================
+//=================================================================
+
+
+
+//=================================================================
+//========================= set hash ==============================
+//=================================================================
+
+map<int64,int> setHashes;
+
+inline set<int64>& getSet(int getIndex)
+{
+    return servers[getIndex].paths;
+}
+
+void calcSetHash(set<int64> data, int setIndex)
+{
+	const int p = 239017;
+	int64 hash = 0, p_pow = 1;
+	
+	for(int64 d : data)
+	{
+	    //hash += (pathHash - 'a' + 1) * p_pow;
+	    hash += (d + 1) * p_pow;
+	    p_pow *= p;
+	}
+	
+	while(true)
+	{
+		int ind;
+		if(tryGetValue(setHashes,hash,ind))
+		{
+		    set<int64>& existingData = getSet(ind);
+		    
+		    if(existingData==data)
+		    {
+		        break;
+		    }
+		    else
+		    {
+		        ++hash;
+		    }		    
+		}
+		else
+		{
+			totalHashes[hash]=setIndex;
+			break;
+		}		
+	}	
+	
+	srv.totalHash = hash;
+}
+
+//=================================================================
+//========================= set hash ==============================
+//=================================================================
+
 
 void prepare(string &s)
 {
@@ -94,12 +155,10 @@ void prepare(string &s)
 	{
 		host = s.substr(7,pos - 7);
 		path = s.substr(pos);
-	}
+	}	
 	
-	//cout << s << "   "<<host<<"   "<<path<<endl;
-	
-	int64 hostHash = calcHash(host);
-	int64 pathHash = calcHash(path);
+	int64 hostHash = calcStringHash(host);
+	int64 pathHash = calcStringHash(path);
 	
 	int srvIndex;
 	
@@ -107,8 +166,7 @@ void prepare(string &s)
 	{
 		if(servers[srvIndex].paths.count(pathHash)==0)
 		{
-			servers[srvIndex].paths.insert(pathHash);
-			//servers[srvIndex].totalHash += pathHash;			
+			servers[srvIndex].paths.insert(pathHash);			
 		}
 	}
 	else
@@ -116,56 +174,11 @@ void prepare(string &s)
 		servers.emplace_back();
 		Server &srv = servers[servers.size()-1];
 		srv.hostString = s.substr(0,pos);
-		//srv.totalString = s;
 		srv.paths.insert(pathHash);
-		//srv.totalHash = pathHash;
 		serversMap[hostHash] = servers.size()-1;
 	}
 }
 
-map<int64,vector<int>> output;
-//vector<vector<int>> output;
-//vector<int> output[100010];
-
-bool visited[100010]={0};
-
-map<int64,int> totalHashes;
-
-void calcTotalHash(int serverIndex)
-{
-    Server &srv = servers[serverIndex];
-    
-	const int p = 239017;
-	//long long hash = 0, p_pow = 1;
-	int64 hash = 0, p_pow = 1;
-	
-	for(int64 pathHash : srv.paths)
-	{
-	    hash += (pathHash - 'a' + 1) * p_pow;
-	    p_pow *= p;
-	}
-	
-	while(true)
-	{
-		int ind;
-		if(tryGetValue(totalHashes,hash,ind))
-		{
-			if(servers[ind].paths!=srv.paths) ++hash;
-			else
-			{
-				totalHashes[hash]=serverIndex;
-				break;
-			}
-		}
-		else
-		{
-			totalHashes[hash]=serverIndex;
-			break;
-		}		
-	}	
-	
-	srv.totalHash = hash;
-}
 
 int main()
 {
@@ -187,7 +200,7 @@ int main()
         
     for(int i=0;i<servers.size();++i)
     {
-        calcTotalHash(i);
+        calcSetHash(servers[i].paths, i);
         
     	vector<int> &outV = output[servers[i].totalHash];
     	outV.push_back(i);
@@ -197,99 +210,19 @@ int main()
     cout <<outGroups<<endl;
 
     
-    /*int outGroups=0;
-    
-    for(int i=0;i<servers.size();i++)
+    for(auto &p : output)
     {
-        if(!visited[i])
+        vector<int> &group = p.second;
+        
+        if(group.size()>1)
         {
-            for(int j=i+1;j<servers.size();++j)
+            for(auto &h : group)
             {
-                if(!visited[j])
-                {
-                    if(servers[i].totalHash == servers[j].totalHash)
-                    {
-                        if(servers[i].paths == servers[j].paths)
-                        {
-                            vector<int>& v = output[i];
-                            if(v.size()==0) v.push_back(i);
-                            v.push_back(j);
-                            visited[i]=true;
-                            visited[j]=true;
-                            
-                            if(v.size()==2) outGroups++;
-                        }
-                    }
-                }
+                cout << servers[h].hostString<<" ";
             }
+            cout << endl;
         }
-    }
-    
-    //cout <<output.size()<<endl;
-    cout <<outGroups<<endl;*/
-    
-    /*if(outGroups>40000)
-    {
-    	set<int> inGroups;
-    	
-		for(auto &p : output)
-		{
-			vector<int> &group = p.second;
-			
-			if(group.size()>1)
-			{
-				for(auto &h : group)
-				{
-					inGroups.insert(h);
-					//cout << servers[h].hostString<<" ";
-					//cout <<h<<" ";
-				}
-				//cout << endl;
-			}
-		}
-		
-		cout <<"inGroups: "<<inGroups.size()<<endl;
-		cout <<"servers: "<<servers.size()<<endl;
-		
-		for(int i=0;i<servers.size();i++)
-		{
-			if(inGroups.count(i)==0)
-			{
-				//cout <<servers[i].hostString<<"   ";
-				cout <<i<<" ";					
-			}			
-		}
-	}
-	else*/
-	{
-    
-		for(auto &p : output)
-		{
-			vector<int> &group = p.second;
-			
-			if(group.size()>1)
-			{
-				for(auto &h : group)
-				{
-					cout << servers[h].hostString<<" ";
-					//cout <<h<<" ";
-				}
-				cout << endl;
-			}
-		}
-		
-		/*for(auto &v : output)
-		{
-		    if(v.size()>1)
-		    {
-		        for(auto &h : v)
-				{
-					cout << servers[h].hostString<<" ";
-				}
-				cout << endl;
-		    }
-		}*/    
-    }
+    }    
     
     return 0;
 }
