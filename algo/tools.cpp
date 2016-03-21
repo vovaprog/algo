@@ -186,3 +186,13 @@ void segmentTreePrint()
 std::ios::sync_with_stdio(false);
 cin.tie(0);
 
+//set elements to needed value
+int directory[100];
+std::fill(directory, directory + 100, -1);
+
+//print int64
+printf("%I64d ",q.back()+x);
+
+
+#define forn(i, n) for (int i = 0; i < (int)(n); ++i)
+
