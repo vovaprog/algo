@@ -42,3 +42,38 @@ hash string and set
 Чтобы узнать хеш массива его нужно отсортировать, все элементы объединить в строку через разделитель и взять хеш строки.
 
 
+http://codeforces.com/blog/entry/6251?locale=ru
+The problem is the output, cout << endl flushes the output every time wich hit performance badly. To output an end line without flushing just use #define endl '\n'
+favor '\n' instead of endl for ending lines. endl flushes the buffer every time. 
+Put this: ios_base::sync_with_stdio(false);cin.tie(0); in the beggining of the main func. cin/cout will be as fast as scanf and printf (even faster). BUT DONT USE ENDL (use "\n")
+try this problem http://codeforces.com/contest/456/problem/E just copy any accepted C++ solution and submit it with endl and ios_base::sync_with_stdio(false);cin.tie(0); it will fail.
+inline void scan_uint(int* p) {
+    static char c;
+    while ((c = getchar_unlocked()) < '0'); // just to be safe
+    for (*p = c-'0'; (c = getchar_unlocked()) >= '0'; *p = *p*10+c-'0');
+}
+
+int64
+scanf("%I64d",&x);
+printf("%I64d",x);
+
+float
+scanf("%f",&x);
+printf("%f",x);
+
+double
+scanf("%lf",&x);
+printf("%lf",x);
+
+long double
+scanf("%llf",&x);
+printf("%llf",x);
+
+cin.tie(0);
+
+Мой тест (test_stdio.cpp):
+без std::ios::sync_with_stdio(false); cin.tie(0);   cin в 4 раза медленнее чем scanf на int и на строках.
+c std::ios::sync_with_stdio(false); cin.tie(0); cin и scanf примерно одинаково.
+
+
+
