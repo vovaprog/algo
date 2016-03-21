@@ -1,0 +1,100 @@
+//644c
+
+//=================================================================
+//====================== string hash ==============================
+//=================================================================
+
+map<int64,string> stringHashes;
+
+int64 calcStringHash(string &s)
+{
+	const int p = 239017;
+	int64 hash = 0, p_pow = 1;
+	for (size_t i=0; i<s.length(); ++i)
+	{		
+		hash += (s[i] + 1) * p_pow; //add one, to make 00000 hash not zero
+		p_pow *= p;
+	}	
+	
+	while(true)
+	{
+		string existingS;
+		if(tryGetValue(stringHashes,hash,existingS))
+		{
+		    if(existingS==s)
+		    {
+		        break;    
+		    }
+		    else
+		    {
+		        ++hash;
+		    }
+		}
+		else
+		{
+			stringHashes[hash]=s;
+			break;
+		}		
+	}
+	
+	return hash;
+}
+
+//=================================================================
+//====================== string hash ==============================
+//=================================================================
+
+
+
+//=================================================================
+//========================= set hash ==============================
+//=================================================================
+
+map<int64,int> setHashes;
+
+inline set<int64>& getSet(int getIndex)
+{
+    return servers[getIndex].paths;
+}
+
+int64 calcSetHash(set<int64> data, int setIndex)
+{
+	const int p = 239017;
+	int64 hash = 0, p_pow = 1;
+	
+	for(int64 d : data)
+	{
+	    hash += (d + 1) * p_pow;
+	    p_pow *= p;
+	}
+	
+	while(true)
+	{
+		int ind;
+		if(tryGetValue(setHashes,hash,ind))
+		{
+		    set<int64>& existingData = getSet(ind);
+		    
+		    if(existingData==data)
+		    {
+		        break;
+		    }
+		    else
+		    {
+		        ++hash;
+		    }		    
+		}
+		else
+		{
+			setHashes[hash]=setIndex;
+			break;
+		}		
+	}	
+	
+	return hash;
+}
+
+//=================================================================
+//========================= set hash ==============================
+//=================================================================
+

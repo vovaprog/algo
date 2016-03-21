@@ -11,13 +11,12 @@ struct Server{
 	int64 host;
 	string hostString;
 	set<int64> paths;
-	int64 totalHash=0;
 };
 
 vector<Server> servers;
 map<int64,int> serversMap;
-
 map<int64,vector<int>> output;
+
 
 template<class TMap,class TKey,class TValue>
 inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
@@ -43,11 +42,8 @@ int64 calcStringHash(string &s)
 	const int p = 239017;
 	int64 hash = 0, p_pow = 1;
 	for (size_t i=0; i<s.length(); ++i)
-	{
-		//add one, to make 'aaaaa' hash not zero
-		//hash += (s[i] - 'a' + 1) * p_pow;
-		
-		hash += (s[i] + 1) * p_pow;
+	{		
+		hash += (s[i] + 1) * p_pow; //add one, to make 00000 hash not zero
 		p_pow *= p;
 	}	
 	
@@ -67,7 +63,7 @@ int64 calcStringHash(string &s)
 		}
 		else
 		{
-			hashes[hash]=s;
+			stringHashes[hash]=s;
 			break;
 		}		
 	}
@@ -92,14 +88,13 @@ inline set<int64>& getSet(int getIndex)
     return servers[getIndex].paths;
 }
 
-void calcSetHash(set<int64> data, int setIndex)
+int64 calcSetHash(set<int64> data, int setIndex)
 {
 	const int p = 239017;
 	int64 hash = 0, p_pow = 1;
 	
 	for(int64 d : data)
 	{
-	    //hash += (pathHash - 'a' + 1) * p_pow;
 	    hash += (d + 1) * p_pow;
 	    p_pow *= p;
 	}
@@ -122,17 +117,18 @@ void calcSetHash(set<int64> data, int setIndex)
 		}
 		else
 		{
-			totalHashes[hash]=setIndex;
+			setHashes[hash]=setIndex;
 			break;
 		}		
 	}	
 	
-	srv.totalHash = hash;
+	return hash;
 }
 
 //=================================================================
 //========================= set hash ==============================
 //=================================================================
+
 
 
 void prepare(string &s)
@@ -200,9 +196,9 @@ int main()
         
     for(int i=0;i<servers.size();++i)
     {
-        calcSetHash(servers[i].paths, i);
+        int64 totalHash = calcSetHash(servers[i].paths, i);
         
-    	vector<int> &outV = output[servers[i].totalHash];
+    	vector<int> &outV = output[totalHash];
     	outV.push_back(i);
     	if(outV.size()==2) outGroups++;
     }
@@ -226,3 +222,5 @@ int main()
     
     return 0;
 }
+
+

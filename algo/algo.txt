@@ -1,3 +1,8 @@
 631d_2
 Knuth–Morris–Pratt search
 
+644c 
+hash string and set
+
+
+

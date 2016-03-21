@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=krok_c
+PROGRAM=644c
 
 printf "\n\n\n\n\n\n\n\n"
 
