@@ -85,6 +85,16 @@ bool operator<(const Town &t0, const Town &t1)
     return t0.weight < t1.weight; 
 }
 
+int compareIntAsc( const void* a, const void* b)
+{
+     int int_a = * ( (int*) a );
+     int int_b = * ( (int*) b );
+     
+     if(int_a<int_b) return -1;
+     else if(int_a>int_b) return 1;
+     else return 0;
+}
+
 void speedTest(int *listOriginal,int listSize, int maxValue)
 {
     int *list=new int[listSize];
@@ -134,6 +144,16 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
         test_sort(list,listSize);
     }
 
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        {
+            SimpleProfiler sp("heap stl");
+            heapSortStl(list,listSize);
+        }
+        test_sort(list,listSize);
+    }
+    
+    
     /*{
         memcpy(list,listOriginal,listSize*sizeof(int));
         int maxBit = mostSignificantBit(maxValue);
@@ -164,6 +184,29 @@ void speedTest(int *listOriginal,int listSize, int maxValue)
         test_sort(list,listSize);
     }
 
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        {
+            SimpleProfiler sp("std qsort");            
+            qsort(list, listSize, sizeof(int), compareIntAsc );
+        }
+        test_sort(list,listSize);
+    }
+
+    {
+        memcpy(list,listOriginal,listSize*sizeof(int));
+        {
+            SimpleProfiler sp("std sort int");            
+            std::sort(list,list+listSize,
+                [](const int &t0, const int &t1)
+                {
+                    return t0<t1;
+                });
+
+        }
+        test_sort(list,listSize);
+    }
+    
     {
         Town *towns = new Town[listSize];
         

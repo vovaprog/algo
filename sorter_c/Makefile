@@ -6,7 +6,7 @@ DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.Td
 
 SRCS := $(shell ls *.cpp 2>/dev/null) $(shell ls *.c 2>/dev/null) 
 
-CXXFLAGS += -std=c++11 -I. -O3
+CXXFLAGS += -std=c++11 -I. -I../algo -O3
 
 COMPILE.c = $(CC) $(DEPFLAGS) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c
 COMPILE.cc = $(CXX) $(DEPFLAGS) $(CXXFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c

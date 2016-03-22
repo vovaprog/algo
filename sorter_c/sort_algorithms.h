@@ -22,5 +22,8 @@ void testReverseNeighbors();
 
 void quickSort(int *list,int listSize);
 
+void heapSortStl(int *list, int listSize);
+
 #include <merge_sort.h>
+
 

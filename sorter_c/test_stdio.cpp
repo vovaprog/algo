@@ -9,7 +9,7 @@ using namespace std;
 
 typedef long long int int64;
 
-int main()
+int main2()
 {
     std::ios::sync_with_stdio(false); cin.tie(0);
         
