@@ -15,11 +15,6 @@ void debug(const char *format, ...)
 
 
 
-nextSet->insert(r);
-nextSet->erase(r);  
-nextSet->count(r);
-
-
 template<class TMap,class TKey,class TValue>
 inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 {
@@ -33,9 +28,31 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 }
 
 
+
+std::ios::sync_with_stdio(false);
+cin.tie(0);
+
+//set elements to needed value
+int directory[100];
+std::fill(directory, directory + 100, -1);
+
+//print int64
+printf("%I64d ",q.back()+x);
+
+
+#define forn(i, n) for (int i = 0; i < (int)(n); ++i)
+
+
+
 usersEmplace.emplace(key, "abc");
 usersIndex[key] = User("abc");
 usersInsert.insert(pair<string,User>(key, User("abc")));
+
+
+nextSet->insert(r);
+nextSet->erase(r);  
+nextSet->count(r);
+
 
 
 /*
@@ -182,17 +199,4 @@ void segmentTreePrint()
 //========= поиск максимальной возрастающей подпоследовательности (элементы отличаются только на +1) =========
 
 
-
-std::ios::sync_with_stdio(false);
-cin.tie(0);
-
-//set elements to needed value
-int directory[100];
-std::fill(directory, directory + 100, -1);
-
-//print int64
-printf("%I64d ",q.back()+x);
-
-
-#define forn(i, n) for (int i = 0; i < (int)(n); ++i)
 
