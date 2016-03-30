@@ -39,6 +39,7 @@ std::fill(directory, directory + 100, -1);
 //print int64
 printf("%I64d ",q.back()+x);
 
+printf("%I64d ",x);
 
 #define forn(i, n) for (int i = 0; i < (int)(n); ++i)
 
