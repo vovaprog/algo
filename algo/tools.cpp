@@ -94,92 +94,6 @@ void err(vector<string>::iterator it, T a, Args... args) {
 
 
 
-
-//================================================================
-//===================== segment tree (min) =======================
-//================================================================
-
-#define INF 2000000000
-
-int *t;
-int treeSize;
-
-void segmentTreeInit(int size)
-{
-    treeSize = size;
-    
-    int tSize = size * 4;
-    
-    t = new int[tSize];
-    
-    for(int i=0;i<tSize;i++)
-    {
-        t[i] = INF;
-    }
-}
-
-int _segmentTreeFind(int v, int tl, int tr, int l, int r) 
-{
-	if (l > r)
-	{
-		return INF;
-	}
-	if (l == tl && r == tr)
-	{
-		return t[v];
-	}
-	
-	int tm = (tl + tr) / 2;
-	
-	return min(
-	    _segmentTreeFind (v*2, tl, tm, l, min(r,tm)),
-		_segmentTreeFind (v*2+1, tm+1, tr, max(l,tm+1), r)
-		);
-}
-
-int segmentTreeFind(int l, int r)
-{
-    return _segmentTreeFind(1,0,treeSize-1,l,r);
-}
-
-void _segmentTreeUpdate(int v, int tl, int tr, int pos, int new_val) {
-	if (tl == tr)
-	{
-		t[v] = new_val;
-	}
-	else 
-	{
-		int tm = (tl + tr) / 2;
-		if (pos <= tm)
-			_segmentTreeUpdate (v*2, tl, tm, pos, new_val);
-		else
-			_segmentTreeUpdate (v*2+1, tm+1, tr, pos, new_val);
-		t[v] = min(t[v*2], t[v*2+1]);
-	}
-}
-
-void segmentTreeUpdate(int pos, int newVal)
-{
-    _segmentTreeUpdate(1,0,treeSize-1,pos,newVal);
-}
-
-void segmentTreePrint()
-{
-	printf("[[[   ");
-	for(int i=0;i<treeSize * 4;i++)
-	{	
-	    if(t[i]==INF) printf("INF ");
-	    else printf("%d ",t[i]);
-	}
-	printf("]]]\n");
-}
-
-//================================================================
-//===================== segment tree (min) =======================
-//================================================================
-
-
-
 //========= поиск максимальной возрастающей подпоследовательности (элементы отличаются только на +1) =========
     map<int,int> m;
     int mx = 1;
@@ -200,4 +114,57 @@ void segmentTreePrint()
 //========= поиск максимальной возрастающей подпоследовательности (элементы отличаются только на +1) =========
 
 
+
+//================================== multimap ===================================================
+multimap<string,string> mm;
+
+//insert
+mm.insert(make_pair("key1","val11"));
+mm.emplace("key1","val12");
+
+//iterate
+for(auto &p : mm)
+{
+	cout <<p.first<<" "<<p.second<<endl;	    	
+}
+cout <<mm.begin()->first<<endl;   
+
+
+//get elements by key (p is pair - first, second)
+auto p = mm.equal_range(key); 
+    
+for(auto it=p.first;it!=p.second;++it)
+{
+	cout <<it->second<<endl;	
+}
+
+//get number of found items:
+cout <<"number of items: "<<distance(p.first,p.second)<<endl;
+
+//erase
+int removedCount = mm.erase(key); //Return value Number of elements removed.
+auto p2 = mm.equal_range(key);
+mm.erase(p2.first,p2.second); //Return value  Iterator following the last removed element.
+auto p2 = mm.equal_range(key);
+mm.erase(p2.first); //Return value  Iterator following the last removed element.
+
+//number of elements with specific key:
+mm.count(key);
+
+//number of elements
+mm.size();
+
+//================================== multimap ===================================================
+
+
+
+    //=================== priority queue ==========================    
+    priority_queue<string> q;
+    q.push("hello");
+    q.emplace("world");
+    q.push("program");
+    cout <<q.top()<<" "<<q.top()<<q.size()<<endl;
+    q.pop();
+    cout <<q.top()<<" "<<q.top()<<q.size()<<endl;    
+    //=================== priority queue ==========================
 
