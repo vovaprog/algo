@@ -75,5 +75,16 @@ cin.tie(0);
 без std::ios::sync_with_stdio(false); cin.tie(0);   cin в 4 раза медленнее чем scanf на int и на строках.
 c std::ios::sync_with_stdio(false); cin.tie(0); cin и scanf примерно одинаково.
 
+//===================================================================
 
+Можно сортировать сразу по нескольким ключам и таким образом один массив разбить
+на группы, а внутри группы отсортировать по заданному значению.
+codeforces 17040715
+struct Node{
+    char s[12];int id,val;
+    bool operator < (const Node &z)const{
+        return id != z.id?id < z.id:val > z.val;
+    }
+}ns[100005];
+sort(ns,ns+n);
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=651b
+PROGRAM=659b_multiset
 
 printf "\n\n\n\n\n\n\n\n"
 
