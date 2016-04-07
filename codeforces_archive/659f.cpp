@@ -44,6 +44,7 @@ int findField(int r,int c)
     if(r>0)
     {
         int h = (r-1)*nCols+c;
+        debug2("1>>> %d",h);
         if(tryGetValue(fsMap,h,ind))
         {
             return ind;
@@ -52,6 +53,7 @@ int findField(int r,int c)
     if(c<nCols-1)
     {
         int h = r*nCols+c+1;
+        debug2("2>>> %d",h);
         if(tryGetValue(fsMap,h,ind))
         {
             return ind;
@@ -60,6 +62,7 @@ int findField(int r,int c)
     if(r<nRows-1)
     {
         int h = (r+1)*nCols+c;
+        debug2("3>>> %d",h);
         if(tryGetValue(fsMap,h,ind))
         {
             return ind;
@@ -68,6 +71,7 @@ int findField(int r,int c)
     if(c>0)
     {
         int h = r*nCols+c-1;
+        debug2("4>>> %d",h);
         if(tryGetValue(fsMap,h,ind))
         {
             return ind;
@@ -86,6 +90,7 @@ bool calcResult(int fsIndex)
     
     if(k % st.val!=0)
     {
+        debug("ret 1\n");
         return false;
     }
  
@@ -95,6 +100,7 @@ bool calcResult(int fsIndex)
     
     if(stsSize<neededCount) 
     {
+        debug("ret 2: %d %d\n",stsSize,neededCount);
         return false;
     }
     
@@ -150,6 +156,7 @@ int main()
         }
         debug2("%d",fsIndex);
         fs[fsIndex].sts.push_back(st);
+        debug2("----------- %d %d",fsIndex,fs[fsIndex].sts.size());
         fsMap[st.r*nCols+st.c] = fsIndex;
         debug2("%d %d",st.r*nCols+st.c,fsIndex);
         
