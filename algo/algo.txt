@@ -5,4 +5,9 @@ Knuth–Morris–Pratt search
 hash string and set
 
 
+Система непересекающихся множеств
+Disjoint-set data structure
+659f
+kruskal_minimum_spanning_tree.cpp
+disjoint_set.cpp
 

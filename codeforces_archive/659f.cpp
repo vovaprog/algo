@@ -15,117 +15,151 @@ struct Stog{
     }
 };
 
-struct Field{
-    vector<Stog> sts;    
-};
+int nRows,nCols;
+int64 k;
 
-template<class TMap,class TKey,class TValue>
-inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
+bool visited[1000010]={false};
+int result[1010][1010]={0};
+bool dfsVisited[1010][1010]={false};
+
+
+//==========================================================================
+//Система непересекающихся множеств
+//Disjoint-set data structure
+//==========================================================================
+
+const int djItemCount = 1000010;
+int p[djItemCount];
+int64 s[djItemCount]; //дополнение
+
+void djInit()
 {
-    auto it = m.find(key);
-    if(it!=m.end())
-    {
-        u = it->second;
-        return true;
-    }
-    return false;
+    iota(p, p+djItemCount, 0);    
 }
 
-vector<Field> fs;
+int djFind(int x) 
+{
+    if(p[x]==x)
+    {
+        return x;
+    }
+    else
+    {
+        p[x] = djFind(p[x]);
+        return p[x];
+    }
+}
 
-int nRows,nCols,k;
+void djUnite(int x, int y) 
+{
+    int fx = djFind(x);
+    int fy = djFind(y);
+    
+    if(fx == fy)
+    {
+        return;
+    }
 
-map<int,int> fsMap;
+    s[fy] = s[fx] + s[fy]; //дополнение
+    
+    p[fx] = fy;    
+}
 
-int findField(int r,int c)
+//==========================================================================
+//==========================================================================
+//==========================================================================
+
+
+inline int getId(int r, int c)
+{
+    return r*nCols + c;
+}
+
+int checkAdjacent(int r,int c)
 {        
-    int ind;
+    int id = getId(r,c);
     
     if(r>0)
     {
-        int h = (r-1)*nCols+c;
-        debug2("1>>> %d",h);
-        if(tryGetValue(fsMap,h,ind))
-        {
-            return ind;
-        }
+        int h = getId(r-1,c);
+        if(visited[h]) djUnite(id,h);
     }
     if(c<nCols-1)
     {
-        int h = r*nCols+c+1;
-        debug2("2>>> %d",h);
-        if(tryGetValue(fsMap,h,ind))
-        {
-            return ind;
-        }        
+        int h = getId(r,c+1);
+        if(visited[h]) djUnite(id,h);        
     }
     if(r<nRows-1)
     {
-        int h = (r+1)*nCols+c;
-        debug2("3>>> %d",h);
-        if(tryGetValue(fsMap,h,ind))
-        {
-            return ind;
-        }        
+        int h = getId(r+1,c);
+        if(visited[h]) djUnite(id,h);        
     }
     if(c>0)
     {
-        int h = r*nCols+c-1;
-        debug2("4>>> %d",h);
-        if(tryGetValue(fsMap,h,ind))
-        {
-            return ind;
-        }        
+        int h = getId(r,c-1);
+        if(visited[h]) djUnite(id,h);        
     }
-    
-    return -1;
 }
 
-int result[1010][1010]={0};
-
-bool calcResult(int fsIndex)
+int dfs(int r,int c,int need,int val)
 {
-    vector<Stog> &sts = fs[fsIndex].sts;
-    Stog &st = sts[sts.size()-1];
+    dfsVisited[r][c] = true;
+    result[r][c]=val;
+    --need;
     
-    if(k % st.val!=0)
+    if(r>0 && need>0)
     {
-        debug("ret 1\n");
-        return false;
+        if(!dfsVisited[r-1][c] && visited[getId(r-1,c)])
+        {
+            need = dfs(r-1,c,need,val);
+        }
     }
- 
-    int neededCount = k / st.val;
-    
-    int stsSize = sts.size();
-    
-    if(stsSize<neededCount) 
+    if(c<nCols-1 && need>0)
     {
-        debug("ret 2: %d %d\n",stsSize,neededCount);
-        return false;
+        if(!dfsVisited[r][c+1] && visited[getId(r,c+1)])
+        {
+            need = dfs(r,c+1,need,val);
+        }
+    }
+    if(r<nRows-1 && need>0)
+    {
+        if(!dfsVisited[r+1][c] && visited[getId(r+1,c)])
+        {
+            need = dfs(r+1,c,need,val);
+        }
+    }
+    if(c>0 && need>0)
+    {
+        if(!dfsVisited[r][c-1] && visited[getId(r,c-1)])
+        {
+            need = dfs(r,c-1,need,val);
+        }
     }
     
-    for(int i=stsSize-1;i>=0 && neededCount>=0;--i,--neededCount)
-    {
-        Stog &s = sts[i];
-        result[s.r][s.c] = st.val;
-    }
+    return need;
+}
+
+bool calcResult(Stog &st)
+{
+    dfs(st.r,st.c,k/st.val,st.val);
     
     printf("YES\n");
+    
     for(int i=0;i<nRows;++i)
     {
         for(int j=0;j<nCols;++j)
         {
             printf("%d ",result[i][j]);
-        }        
+        }
         printf("\n");
     }
 }
 
 int main()
 {
+    djInit();
     
-    
-    scanf("%d%d%d",&nRows,&nCols,&k);
+    scanf("%d%d%I64d",&nRows,&nCols,&k);
     
     vector<Stog> sts;
     sts.reserve(nRows*nCols);
@@ -144,29 +178,29 @@ int main()
     
     sort(sts.begin(),sts.end(),greater<Stog>());
     
+    fill(s, s+djItemCount, 1);
+    
     for(auto &st : sts)
-    {        
-        int fsIndex = findField(st.r,st.c);
-        if(fsIndex<0)
-        {
-            debug("fsIndex<0\n");
-            Field f;
-            fs.push_back(f);
-            fsIndex = fs.size()-1;
-        }
-        debug2("%d",fsIndex);
-        fs[fsIndex].sts.push_back(st);
-        debug2("----------- %d %d",fsIndex,fs[fsIndex].sts.size());
-        fsMap[st.r*nCols+st.c] = fsIndex;
-        debug2("%d %d",st.r*nCols+st.c,fsIndex);
+    {
+        int id = getId(st.r,st.c);
+        visited[id] = true;
         
-        if(calcResult(fsIndex))
+        checkAdjacent(st.r,st.c);
+        if(k % st.val==0)
         {
-            return 0;
-        }
+            int64 sm = s[djFind(id)];
+            
+            if(sm>=k/st.val)
+            {
+                calcResult(st);
+                return 0;
+            }
+        }        
     }
     
     printf("NO\n");
     
     return 0;
 }
+
+

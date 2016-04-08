@@ -41,6 +41,9 @@ printf("%I64d ",q.back()+x);
 
 printf("%I64d ",x);
 
+int64 k;
+scanf("%I64d",&k);
+
 #define forn(i, n) for (int i = 0; i < (int)(n); ++i)
 
 
