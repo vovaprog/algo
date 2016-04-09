@@ -1,0 +1,30 @@
+String codeForcesFolder = "/mnt/programs/programs/learn 2015/learn_algorithms/codeforces_archive/";
+
+String programName = Macros.input(view, "file name:");
+
+if(programName==null || programName.length()<1)
+{
+    return;
+}
+
+String resultFileName = codeForcesFolder+programName+".cpp";
+
+File f = new File(resultFileName);
+if(f.exists()) 
+{ 
+    Macros.error(view, "file already exists!");
+    return;
+}
+else
+{
+    cp(codeForcesFolder+"codeforces_template.cpp", resultFileName); 
+
+    jEdit.openFile(view,resultFileName);
+}
+
+new File(codeForcesFolder+"test_data/"+programName).mkdirs();
+new File(codeForcesFolder+"test_data/"+programName+"/1.txt").createNewFile();
+new File(codeForcesFolder+"test_data/"+programName+"/2.txt").createNewFile();
+new File(codeForcesFolder+"test_data/"+programName+"/3.txt").createNewFile();
+
+
