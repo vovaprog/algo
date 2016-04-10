@@ -1,3 +1,6 @@
+import java.nio.file.*;
+import java.nio.charset.*;
+
 String codeForcesFolder = "/mnt/programs/programs/learn 2015/learn_algorithms/codeforces_archive/";
 
 String programName = Macros.input(view, "file name:");
@@ -28,3 +31,11 @@ new File(codeForcesFolder+"test_data/"+programName+"/2.txt").createNewFile();
 new File(codeForcesFolder+"test_data/"+programName+"/3.txt").createNewFile();
 
 
+
+String buildFileName = codeForcesFolder+"codeforces_build_and_run.sh";
+
+Charset charset = StandardCharsets.UTF_8;
+Path path = Paths.get(buildFileName,new String[0]);
+String content = new String(Files.readAllBytes(path), charset);
+content = content.replaceFirst("PROGRAM=[A-Za-z0-9]+", "PROGRAM="+programName);
+Files.write(path, content.getBytes(charset), new OpenOption[0]);
