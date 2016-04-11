@@ -14,6 +14,7 @@ struct Segment{
 
 Segment ss[100010];
 int ssInd[100010];
+//int incs[100010]={0};
 
 struct SetCompareBegin {
     bool operator() (const int x, const int y) const{
@@ -50,9 +51,13 @@ int main()
     {
         auto it = begs.lower_bound(ssInd[i]);
 
-        for(;it!=begs.end();++it)
+//        ++incs[ss[*it]];
+        if(n<100000)
         {
-            ss[*it].count++;
+            for(;it!=begs.end();++it)
+            {
+                ss[*it].count++;
+            }
         }
 
         begs.insert(ssInd[i]);
