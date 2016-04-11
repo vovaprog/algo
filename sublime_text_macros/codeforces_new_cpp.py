@@ -60,5 +60,5 @@ class CodeforcesNewCppCommand(sublime_plugin.WindowCommand):
             shutil.copyfile(codeForcesFolder+"codeforces_template.cpp", resultFileName)
             self.window.open_file(resultFileName)
 
-            replaceRegex(codeForcesFolder+"codeforces_build_and_run.sh","PROGRAM=[a-zA-Z0-9]+","PROGRAM="+programName)
+            replaceRegex(codeForcesFolder+"codeforces_build_and_run.sh","PROGRAM=[a-zA-Z0-9_]+","PROGRAM="+programName)
 
