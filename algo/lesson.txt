@@ -88,3 +88,19 @@ struct Node{
 }ns[100005];
 sort(ns,ns+n);
 
+
+652d_5
+Быстрое нахождение индекса элемента в set - нужно использовать 
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
+typedef tree<int,null_type,greater<int>,rb_tree_tag,tree_order_statistics_node_update> Tree;
+Tree begs;
+s.count = begs.order_of_key(s.b);
+begs.insert(s.b);
+
+652d_6
+Чтобы использовать большие или отрицательные значения в дереве Фенвика можно создать массив со значениями,
+а в дереве использовать индексы в массиве.
+
+

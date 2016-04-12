@@ -11,3 +11,10 @@ Disjoint-set data structure
 kruskal_minimum_spanning_tree.cpp
 disjoint_set.cpp
 
+
+Дерево Фенвика
+652d_6.cpp
+fenwick_tree_sum.cpp
+
+
+

@@ -171,3 +171,26 @@ mm.size();
     cout <<q.top()<<" "<<q.top()<<q.size()<<endl;    
     //=================== priority queue ==========================
 
+//================== быстрый поиск индекса в set-е ========================================
+//652d_5.cpp
+//find_by_order()
+//order_of_key()
+//http://codeforces.com/blog/entry/11080
+
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+using namespace __gnu_pbds;
+
+typedef tree<int,null_type,greater<int>,rb_tree_tag,tree_order_statistics_node_update> Tree;
+
+Tree begs;
+
+s.count = begs.order_of_key(s.b);
+
+begs.insert(s.b);
+
+
+//================== быстрый поиск индекса в set-е ========================================
+
+
