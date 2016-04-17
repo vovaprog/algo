@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=chef_johny
+PROGRAM=c
 
 printf "\n\n\n\n\n\n\n\n"
 
