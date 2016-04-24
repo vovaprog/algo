@@ -47,6 +47,10 @@ scanf("%I64d",&k);
 #define forn(i, n) for (int i = 0; i < (int)(n); ++i)
 
 
+//works on www.hackerrank.com
+scanf("%lld",&r);
+printf("%lld", s);
+
 
 usersEmplace.emplace(key, "abc");
 usersIndex[key] = User("abc");
