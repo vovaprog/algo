@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=chef_bintreeq_2
+PROGRAM=669c
 
 printf "\n\n\n\n\n\n\n\n"
 
