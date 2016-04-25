@@ -7,29 +7,19 @@ using namespace std;
 
 typedef long long int int64;
 
-
 int main()
 {
-    int nTests;
+    int n;
     
-    cin >> nTests;
-
-    for(int tst=0;tst<nTests;++tst)
+    scanf("%d",&n);
+    
+    for(int i = 0; i < n; ++i)
     {
-        int64 l,r;
-        cin >>l>>r;
-
-        int64 result=0;
-
-        for(int64 d=1;d<=r;d+=2)
-        {
-            int64 col = (r / d) - (l / d);
-            if(l % d==0) ++col;
-            result += col * d;
-        }
-
-        cout <<result << endl;
+        int r;
+        scanf("%d",&r);        
     }
+    
+    
     
     
     return 0;

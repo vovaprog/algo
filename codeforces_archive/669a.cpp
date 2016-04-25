@@ -9,18 +9,21 @@ typedef long long int int64;
 
 int main()
 {
-    int n;
+    int64 n;
     
-    scanf("%d",&n);
+    cin >> n;
     
-    for(int i = 0; i < n; ++i)
+    int64 d = n / 3;
+    int64 rem = n % 3;
+    
+    int64 result = d * 2;
+    
+    if(rem!=0)
     {
-        int r;
-        scanf("%d",&r);        
+        ++result;
     }
-    
-    
-    
+
+    cout << result;
     
     return 0;
 }
