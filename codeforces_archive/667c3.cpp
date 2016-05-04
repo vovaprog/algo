@@ -7,12 +7,7 @@ using namespace std;
 
 typedef long long int int64;
 
-//set<string> suffs;
-
 char s[100010];
-
-
-
 
 struct Suffix{
     char letters[4];
@@ -32,32 +27,20 @@ struct Suffix{
         }        
     }
     
-    bool operator<(const Suffix &s) const
+    inline bool operator<(const Suffix &s) const
     {
-        if(letters[0]<s.letters[0]) return true;
-        else if(letters[0]>s.letters[0]) return false;
-        else
-        {
-            if(letters[1]<s.letters[1]) return true;
-            else if(letters[1]>s.letters[1]) return false;
-            else
-            {
-                if(letters[2]<s.letters[2]) return true;
-                else if(letters[2]>s.letters[2]) return false;                
-            }                
-        }
+        int val0 = ((int)letters[0] << 16) + 
+            ((int)letters[1] << 8) + (int)letters[2];
+
+        int val1 = ((int)s.letters[0] << 16) + 
+            ((int)s.letters[1] << 8) + (int)s.letters[2];
         
-        return false;
+        return val0 < val1;
     }
     
-    /*operator char*() const
+    inline operator const char*() const
     {
         return letters;    
-    }*/
-    
-    const char* toCharPointer() const
-    {
-        return letters;
     }
 };
 
@@ -93,7 +76,7 @@ bool equal(int start0, int count0, int start1, int count1)
     }        
 }
 
-void parse(int start, int take, int prevTake)
+inline void parse(int start, int take, int prevTake)
 {
     if(prevTake>0)
     {
@@ -103,8 +86,7 @@ void parse(int start, int take, int prevTake)
         }
     }
     
-    //suffs.insert(string(s+start,take));
-    suffs.insert(Suffix(start,take));
+    suffs.emplace(start,take);
     
     if(start-2>=5)
     {
@@ -137,9 +119,7 @@ int main()
     
     for(auto& suf : suffs)
     {
-        //cout <<(char*)suf<<"\n";
-        
-        cout <<suf.toCharPointer()<<"\n";
+        cout <<suf<<"\n";
     }
     
     return 0;
