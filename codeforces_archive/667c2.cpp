@@ -38,30 +38,24 @@ int main()
             
             string second = string(s+cur,2);
                 
+            suffs.insert(second);
+            
             if(cur-2>=5)
             {
                 string first = string(s+cur-2,2);
                 
-                
+                if(cur - 3>=5)
+                {
+                    starts3.insert(cur-3);
+                }
                 
                 if(second!=first)
                 {
-                    suffs.insert(second);
-                    
-                    if(cur - 3>=5)
+                    if(cur - 2>=5)
                     {
-                        starts3.insert(cur-3);
                         starts2.insert(cur-2);
                     }
-                    else if(cur - 2>=5)
-                    {
-                        starts2.insert(cur-2);    
-                    }
                 }                
-            }
-            else
-            {
-                suffs.insert(second);    
             }
         }
         if(!starts3.empty())
@@ -71,28 +65,27 @@ int main()
             
             string second = string(s+cur,3);
                 
+            suffs.insert(second);
+            
             if(cur-3>=5)
             {
                 string first = string(s+cur-3,3);
                 
+                if(cur - 2>=5)
+                {
+                    starts2.insert(cur-2);    
+                }
+                    
                 if(second!=first)
                 {
-                    suffs.insert(second);
-                    
                     if(cur - 3>=5)
                     {
                         starts3.insert(cur-3);
-                        starts2.insert(cur-2);
-                    }
-                    else if(cur - 2>=5)
-                    {
-                        starts2.insert(cur-2);    
                     }
                 }                
             }
             else
             {
-                suffs.insert(second);
                 if(cur-2>=5)
                 {
                     starts2.insert(cur-2);    
