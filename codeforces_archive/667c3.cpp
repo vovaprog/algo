@@ -76,6 +76,32 @@ bool equal(int start0, int count0, int start1, int count1)
     }        
 }
 
+struct HistoryEntry{
+    int start, take, prevTake;
+    
+    HistoryEntry(int start,int take,int prevTake):start(start),
+        take(take),prevTake(prevTake){}
+    
+    bool operator<(const HistoryEntry &ent) const
+    {
+        if(start<ent.start) return true;
+        else if(start>ent.start) return false;
+        else
+        {
+            if(take<ent.take) return true;
+            else if(take>ent.take) return false;
+            else
+            {
+                if(prevTake<ent.prevTake) return true;
+                else if(prevTake>ent.prevTake) return false;
+            }
+        }
+        return false;
+    }
+};
+
+set<HistoryEntry> history;
+
 inline void parse(int start, int take, int prevTake)
 {
     if(prevTake>0)
@@ -88,13 +114,23 @@ inline void parse(int start, int take, int prevTake)
     
     suffs.emplace(start,take);
     
+    history.emplace(start,take,prevTake);
+    
     if(start-2>=5)
     {
-        parse(start - 2, 2, take);
+        HistoryEntry ent(start - 2, 2, take);
+        if(history.count(ent)==0)
+        {
+            parse(start - 2, 2, take);
+        }
     }
     if(start-3>=5)
     {
-        parse(start - 3, 3, take);   
+        HistoryEntry ent(start - 3, 3, take);
+        if(history.count(ent)==0)
+        {
+            parse(start - 3, 3, take);
+        }
     }
 }
 
