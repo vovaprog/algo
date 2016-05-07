@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=667c3
+PROGRAM=codeforces_template_streams
 
 printf "\n\n\n\n\n\n\n\n"
 
