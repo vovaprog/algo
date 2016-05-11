@@ -12,17 +12,17 @@ int main()
 {
     std::ios::sync_with_stdio(false);
     cin.tie(0);
-        
+
     int n;
-    
+
     cin >> n;
-    
+
     for(int i = 0; i < n; ++i)
     {
         int r;
-        cin >> r;        
+        cin >> r;
     }
 
-    
+
     return 0;
 }

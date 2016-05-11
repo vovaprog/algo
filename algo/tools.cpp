@@ -28,6 +28,9 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 }
 
 
+//output double
+cout << std::setprecision(std::numeric_limits< double >::max_digits10) << result <<endl;
+
 
 std::ios::sync_with_stdio(false);
 cin.tie(0);

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=c2
+PROGRAM=c
 
 printf "\n\n\n\n\n\n\n\n"
 
