@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=673a
+PROGRAM=673b
 
 printf "\n\n\n\n\n\n\n\n"
 

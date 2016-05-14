@@ -20,7 +20,7 @@ if(f.exists())
 }
 else
 {
-    cp(codeForcesFolder+"codeforces_template.cpp", resultFileName); 
+    cp(codeForcesFolder+"codeforces_template_streams.cpp", resultFileName); 
 
     jEdit.openFile(view,resultFileName);
 }
@@ -28,8 +28,6 @@ else
 new File(codeForcesFolder+"test_data/"+programName).mkdirs();
 new File(codeForcesFolder+"test_data/"+programName+"/1.txt").createNewFile();
 new File(codeForcesFolder+"test_data/"+programName+"/2.txt").createNewFile();
-new File(codeForcesFolder+"test_data/"+programName+"/3.txt").createNewFile();
-
 
 
 String buildFileName = codeForcesFolder+"codeforces_build_and_run.sh";
@@ -37,5 +35,5 @@ String buildFileName = codeForcesFolder+"codeforces_build_and_run.sh";
 Charset charset = StandardCharsets.UTF_8;
 Path path = Paths.get(buildFileName,new String[0]);
 String content = new String(Files.readAllBytes(path), charset);
-content = content.replaceFirst("PROGRAM=[A-Za-z0-9]+", "PROGRAM="+programName);
+content = content.replaceFirst("PROGRAM=[A-Za-z0-9_]+", "PROGRAM="+programName);
 Files.write(path, content.getBytes(charset), new OpenOption[0]);
