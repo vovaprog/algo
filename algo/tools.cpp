@@ -2,17 +2,23 @@
 
 using namespace std;
 
-void debug(const char *format, ...)
-{
-    /*va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);*/            
-}
+=============================================================================================
 
 #define debug(args...) printf(args);
 #define debug2(fmt,args...) printf(fmt,args);printf("   (%s)\n",#args);
 
+//=====================================================================
+#define debug3(args...) { vector<string> v = splitArgNames(#args); debugPrint(v.begin(), args); }
+vector<string> splitArgNames(const string& s) 
+{ vector<string> v; stringstream ss(s); for (string x; getline(ss, x, ',');) { v.emplace_back(x); } return move(v); }
+void debugPrint(vector<string>::iterator it) { cout <<"\n"; }
+template<typename T, typename... Args>
+void debugPrint(vector<string>::iterator it, T head, Args... args) 
+{ cout << *it <<" = "<< head << "     "; debugPrint(++it, args...); }
+//=====================================================================
+
+
+=============================================================================================
 
 
 template<class TMap,class TKey,class TValue>
@@ -28,16 +34,23 @@ inline bool tryGetValue(TMap &m, TKey &key, TValue &u)
 }
 
 
-//output double
-cout << std::setprecision(std::numeric_limits< double >::max_digits10) << result <<endl;
+=============================================================================================
+
+
+//set max double precision (after this line all double (and float) output will be max precision)
+cout << std::setprecision(std::numeric_limits<double>::max_digits10);
+
+const double PI = 3.141592653589793;
+
+
+=============================================================================================
 
 
 std::ios::sync_with_stdio(false);
 cin.tie(0);
 
-//set elements to needed value
-int directory[100];
-std::fill(directory, directory + 100, -1);
+
+=============================================================================================
 
 //print int64
 printf("%I64d ",q.back()+x);
@@ -47,12 +60,20 @@ printf("%I64d ",x);
 int64 k;
 scanf("%I64d",&k);
 
-#define forn(i, n) for (int i = 0; i < (int)(n); ++i)
-
-
 //works on www.hackerrank.com
 scanf("%lld",&r);
 printf("%lld", s);
+
+=============================================================================================
+
+
+//set elements to needed value
+int directory[100];
+std::fill(directory, directory + 100, -1);
+
+
+#define forn(i, n) for (int i = 0; i < (int)(n); ++i)
+
 
 
 usersEmplace.emplace(key, "abc");
