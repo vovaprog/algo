@@ -19,15 +19,11 @@ typedef long long int int64;
 
 struct Point{
     int val;
-    int index;
+    int result;
     int childSmall, childBig;    
 };
 
 Point points[100100];
-
-int a[100100];
-int pos[100100];
-int result[100100];
 
 void push(int index, int x)
 {
@@ -35,7 +31,7 @@ void push(int index, int x)
     
     if(index == 0) return;
     
-    int cur = 0;
+    int cur = 0, prevValue = 0;
     
     while(true)
     {
@@ -44,6 +40,7 @@ void push(int index, int x)
             if(points[cur].childSmall<0)
             {
                 points[cur].childSmall = index;
+                points[index].result = points[cur].val;
                 return;
             }
             else
@@ -56,6 +53,7 @@ void push(int index, int x)
             if(points[cur].childBig<0)
             {
                 points[cur].childBig = index;
+                points[index].result = points[cur].val;
                 return;
             }
             else
@@ -66,54 +64,41 @@ void push(int index, int x)
     }
 }
 
-void walk(int cur, int parentValue)
-{
-    result[cur] = parentValue;
-    
-    if(points[cur].childSmall>=0)
-    {
-        walk(points[cur].childSmall, points[cur].val);    
-    }
-    if(points[cur].childBig>=0)
-    {
-        walk(points[cur].childBig, points[cur].val);    
-    }
-}
 
 int main()
 {
-    std::ios::sync_with_stdio(false);
-    cin.tie(0);
+    //std::ios::sync_with_stdio(false);
+    //cin.tie(0);
     
     for(int i=0;i<100010;i++)
     {
         points[i].val = -1;
+        points[i].result = -1;
         points[i].childSmall = -1;
         points[i].childBig = -1;
     }
     
     int n;
 
-    cin >> n;
+    //cin >> n;
+    scanf("%d",&n);
 
     for(int i = 0; i < n; ++i)
     {        
         int x;
-        cin >> x;
+        //cin >> x;
+        scanf("%d",&x);
         push(i, x);
-    }
+    }    
     
-    walk(0, -1);
-    
-    for(int i=0;i<n;++i)
+    for(int i=1;i<n;++i)
     {
-        if(result[i]>=0)
-        {
-            cout <<result[i]<<" ";
-        }
+        printf("%d ",points[i].result);
+        //cout <<points[i].result<<" ";
     }
     
-    cout <<endl;
+    //cout <<endl;
+    printf("\n");
     
     return 0;
 }
