@@ -24,18 +24,10 @@ int len=0;
 
 void getRange(char ch, int &outStart, int &outEnd)
 {
+    int curK = k;
     int i;
     
-    for(i=outStart;i<len;++i)
-    {
-        if(s[i]==ch) break;
-    }
-    
-    outStart = i;
-    
-    int curK = k;
-    
-    for(;i<len;++i)
+    for(i = outStart;i<len;++i)
     {
         if(s[i]!=ch) --curK;
         if(curK<0) break;
@@ -82,11 +74,15 @@ int getResult(char ch)
     
     int maxLen = getLen(start,end);
     
+    //debug3(ch, start, end, maxLen);
+    
     while(end < len)
     {
         moveRange(ch, start, end);
                 
         maxLen = max(maxLen, getLen(start,end));
+        
+        //debug3(ch, start, end, maxLen);
     }
     
     return maxLen;
