@@ -19,10 +19,10 @@ typedef long long int int64;
 
 char s[100100];
 
+const int64 MODUL = 1000000000 + 7;
+
 int countZeros(int v)
 {
-    debug2("enter %d",v);
-    
     int zeros = 0;
     for(int i=0;i<6;++i)
     {
@@ -32,21 +32,36 @@ int countZeros(int v)
          }         
     }
     
-    debug2("%d",zeros);
-    
     return zeros;
+}
+
+inline int64 mul_modul(int64 x, int64 y, int64 modul)
+{
+    return ((x % modul) * (y % modul)) % modul;
+}
+
+inline int64 power_modul(int64 base, int64 pwr, int64 modul)
+{
+    int64 result = 1;
+    
+    for(int i=1; i<=pwr; ++i)
+    {
+        result = mul_modul(result, base, modul);
+    }
+    
+    return result;
 }
 
 int main()
 {
-    //std::ios::sync_with_stdio(false);
-    //cin.tie(0);
+    std::ios::sync_with_stdio(false);
+    cin.tie(0);
 
-    scanf("%s",s);
+    cin.getline(s, 100100);    
 
     int n = strlen(s);
     
-    int result = 0;
+    int totalZeros = 0;
     
     for(int i = 0; i < n; ++i)
     {
@@ -73,16 +88,13 @@ int main()
         
         int zeroCount = countZeros(s[i]);
         
-        result += zeroCount;
+        totalZeros += zeroCount;
     }
-
-    debug2("result = %d",result);
     
-    result = (1 << result);
+    int64 result = power_modul(3, totalZeros, MODUL);
     
-    result = result % (1000000000 + 7);
-    
-    printf("%d\n", result);
+    cout <<result<<endl;
     
     return 0;
 }
+

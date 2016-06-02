@@ -22,6 +22,9 @@ int main()
     std::ios::sync_with_stdio(false);
     cin.tie(0);
 
+    //cout << std::setprecision(std::numeric_limits<double>::max_digits10);
+    //cin.getline(s, 100010);    
+    
     int n;
 
     cin >> n;

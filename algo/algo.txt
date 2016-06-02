@@ -20,3 +20,4 @@ fenwick_tree_sum.cpp
 binary_search_last_true.cpp
 chef_bintreeq_2.cpp
 
+Умножение, Возведение в степень по модулю 677с, math.cpp
