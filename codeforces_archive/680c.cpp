@@ -41,27 +41,13 @@ void createDivs()
             }
         }        
     }
-    
-    /*int count = 0;
-    
-    for(int i=2;i<=100;++i)
-    {
-        if(isDiv[i])
-        {
-            cout << divs[i] <<" ";
-            ++count;
-        }
-    }
-    
-    cout << "\ncount: "<<count <<endl;*/    
 }
 
 int main()
 {
     createDivs();
     
-    //string ans;
-    char ans[100];
+    string ans;    
     int countYes = 0;
     int numberYes = 0;
     
@@ -70,14 +56,11 @@ int main()
     for(int i=2;i<=50;++i)
     {
         if(isDiv[i])
-        {
-            printf("%d\n", divs[i]);fflush(stdout);
-            //cout << divs[i] << endl << flush;
+        {            
+            cout << divs[i] << endl;            
+            cin >> ans;            
             
-            //cin >> ans;
-            scanf("%s",ans);
-            if(strcmp(ans,"yes")==0)
-            //if(ans == "yes")
+            if(ans == "yes")
             {
                 ++countYes;
                 numberYes = divs[i];
@@ -93,30 +76,32 @@ int main()
     
     if(countYes>1)
     {
-        //cout << "composite" <<endl<<flush;
-        printf("composite\n");fflush(stdout);
+        cout << "composite"<<endl;        
         return 0;
     }
 
-    if(numberYes * numberYes<=100)
+    int square = numberYes * numberYes; 
+    
+    if(square>=2 && square<=100)
     {
-        printf("%d\n", (numberYes * numberYes));fflush(stdout);
-        scanf("%s",ans);
-        if(strcmp(ans,"yes")==0)
+        cout <<square<<endl;
+        cin >> ans;        
+
+        if(ans == "yes")
         {
-            printf("composite\n");fflush(stdout);    
+            cout << "composite" << endl;    
         }
         else
         {
-            printf("prime\n");fflush(stdout);    
+            cout << "prime" << endl;
         }
     }
     else
     {
-        printf("prime\n");fflush(stdout);
-    }
-    //cout <<"prime" <<endl<<flush;
-    
+        cout << "prime" << endl;
+    }    
     
     return 0;
 }
+
+
