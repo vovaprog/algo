@@ -18,6 +18,15 @@ void debugPrint(vector<string>::iterator it, T head, Args... args)
 //=====================================================================
 
 
+
+void debugPrint() { cout << flush; }
+template<typename T, typename... Args>
+void debugPrint(T head, Args... args)
+{
+    cout << head;
+    debugPrint(args...);
+}
+
 =============================================================================================
 
 
