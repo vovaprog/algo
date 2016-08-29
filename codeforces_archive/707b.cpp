@@ -21,13 +21,15 @@ int main()
 
     cin >> nTowns >> nRoads >> nStores;
 
-    if (nStores < 1)
+    if(nStores < 1)
     {
         cout << -1 << endl;
         return 0;
     }
 
-    for (int i = 0; i < nRoads; ++i)
+    int minL = 0;
+
+    for(int i = 0; i < nRoads; ++i)
     {
         int t0, t1, l;
         cin >> t0 >> t1 >> l;
@@ -35,9 +37,14 @@ int main()
         --t1;
         roads[t0].emplace_back(t1, l);
         roads[t1].emplace_back(t0, l);
+
+        if(minL == 0 || l < minL)
+        {
+            minL = l;
+        }
     }
 
-    for (int i = 0; i < nStores; ++i)
+    for(int i = 0; i < nStores; ++i)
     {
         int store;
         cin >> store;
@@ -46,24 +53,28 @@ int main()
     }
 
     int curMin = INT_MAX;
-    bool found = false;
 
-    for (int i = 0; i < nTowns; ++i)
+    for(int i = 0; i < nTowns; ++i)
     {
-        if (stores[i])
+        if(stores[i])
         {
-            for (auto &r : roads[i])
+            for(auto & r : roads[i])
             {
-                if (!stores[r.to] && r.length < curMin)
+                if(!stores[r.to] && r.length < curMin)
                 {
                     curMin = r.length;
-                    found = true;
+
+                    if(curMin == minL)
+                    {
+                        cout << curMin << endl;
+                        return 0;
+                    }
                 }
             }
         }
     }
 
-    if (found)
+    if(curMin < INT_MAX)
     {
         cout << curMin << endl;
     }
