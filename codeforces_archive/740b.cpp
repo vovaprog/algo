@@ -17,17 +17,20 @@ void debugPrint(vector<string>::iterator it, T head, Args... args)
 
 typedef long long int int64;
 
-/*struct Sub{
-    int start, end;
-    bool operator<(const Sub &s)
-    {
-        return start < s.start;
-    }
-};*/
+struct Sub{
+    int start, end, index, value = 0;
+};
 
-bool compSub(const pair<int,int> &p1, const pair<int,int> &p2)
+bool compSubStarts(Sub *p1, Sub *p2)
 {
-    return p1.start < p2.start;
+    if(p1->start < p2->start) return true;
+    if(p1->start > p2->start) return false;
+    return p1->end < p2->end;
+}
+
+bool compSubEnds(Sub *p1, Sub *p2)
+{
+    return p1->end < p2->end;
 }
 
 int main()
@@ -37,7 +40,8 @@ int main()
    
     int nFlowers, nSubs;
 
-    cin >> nFlowers >> nSubs;
+    istringstream ss("5 4\n1 -2 1 3 -4\n1 2\n4 5\n3 4\n1 4\n");
+    //cin >> nFlowers >> nSubs;
 
     vector<int> flowers;
     flowers.reserve(nFlowers);
@@ -45,29 +49,60 @@ int main()
     for(int i = 0; i < nFlowers; ++i)
     {
         int f;
-        cin >> f;
+        ss >> f;
         flowers.push_back(f);
     }
 
-    vector<pair<int,int>> subs;
-    subs.reserve(nSubs);
+    Sub subs[110];
+    vector<Sub*> subStarts, subEnds;
+    subStarts.reserve(nSubs);
+    subEnds.reserve(nSubs);
 
     for(int i=0; i< nSubs; ++i)
     {
-        int s, e;
-        cin >> s >> e;
-        subs.emplace_back(s,e);
+        ss >> subs[i].start >> subs[i].end;
+        subs[i].index = i + 1;
+        subStarts.push_back(&subs[i]);
+        subEnds.push_back(&subs[i]);
     }
     
-    sort(subs.begin(), subs.end(), compSub);
+    sort(subStarts.begin(), subStarts.end(), compSubStarts);
+    sort(subEnds.begin(), subEnds.end(), compSubEnds); 
+
+    set<int> curSubs;
+    int curSubStarts = 0, curSubEnds = 0;
 
     for(int i=0;i < nFlowers;++i)
     {
-        if(i>=subStarts[curSubStarts])
+        while(i>=subStarts[curSubStarts]->start && i < nSubs)
         {
-            curSubs.insert(
+            curSubs.insert(subStarts[curSubStarts]->index);
+            ++curSubStarts;
+        }
+        while(i>subEnds[curSubEnds]->end && i < nSubs)
+        {
+            curSubs.erase(subEnds[curSubEnds]->index);
+            ++curSubEnds;
+        }
+        for(int subIndex : curSubs)
+        {
+            subs[subIndex].value += flowers[i];
         }
     }
 
+    int sum = 0;
+
+    for(Sub &s : subs)
+    {
+        if(s.value > 0)
+        {
+            sum += s.value;
+        }
+    }
+
+    cout << sum << endl;
+
     return 0;
 }
+
+
