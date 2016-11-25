@@ -41,7 +41,7 @@ int main()
     int nFlowers, nSubs;
 
     istringstream ss("5 4\n1 -2 1 3 -4\n1 2\n4 5\n3 4\n1 4\n");
-    //cin >> nFlowers >> nSubs;
+    ss >> nFlowers >> nSubs;
 
     vector<int> flowers;
     flowers.reserve(nFlowers);
@@ -72,21 +72,21 @@ int main()
     set<int> curSubs;
     int curSubStarts = 0, curSubEnds = 0;
 
-    for(int i=0;i < nFlowers;++i)
+    for(int i=1;i <= nFlowers;++i)
     {
-        while(i>=subStarts[curSubStarts]->start && i < nSubs)
+        while(curSubStarts < nSubsi>=subStarts[curSubStarts]->start && )
         {
             curSubs.insert(subStarts[curSubStarts]->index);
             ++curSubStarts;
         }
-        while(i>subEnds[curSubEnds]->end && i < nSubs)
+        while(i>subEnds[curSubEnds]->end && curSubEnds < nSubs)
         {
             curSubs.erase(subEnds[curSubEnds]->index);
             ++curSubEnds;
         }
         for(int subIndex : curSubs)
         {
-            subs[subIndex].value += flowers[i];
+            subs[subIndex - 1].value += flowers[i - 1];
         }
     }
 
