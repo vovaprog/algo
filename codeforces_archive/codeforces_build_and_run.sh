@@ -1,12 +1,12 @@
 #!/bin/bash
 
-PROGRAM=733a
+PROGRAM=731a
 
 printf "\n\n\n\n\n\n\n\n"
 
 mkdir -p ./bin
 
-g++ -O0 -g -std=c++11 -I. -include stdc++.h -O2 ./$PROGRAM.cpp -o ./bin/$PROGRAM || exit 1
+g++ -O0 -g -std=c++11 -I. -include stdc++.h ./$PROGRAM.cpp -o ./bin/$PROGRAM || exit 1
 #g++ -std=c++11 -g -O2 ./$PROGRAM.cpp -o ./$PROGRAM || exit 1
 
 printf "\n\nbuild time: $SECONDS\n\n"
